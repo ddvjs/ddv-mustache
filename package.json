@@ -1,0 +1,113 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "ddv-server-mustache-1-0@~0.0.10",
+        "scope": null,
+        "escapedName": "ddv-server-mustache-1-0",
+        "name": "ddv-server-mustache-1-0",
+        "rawSpec": "~0.0.10",
+        "spec": ">=0.0.10 <0.1.0",
+        "type": "range"
+      },
+      "/Users/hua/Documents/其他项目/warderCdn"
+    ]
+  ],
+  "_from": "ddv-server-mustache-1-0@>=0.0.10 <0.1.0",
+  "_id": "ddv-server-mustache-1-0@0.0.10",
+  "_inCache": true,
+  "_location": "/ddv-server-mustache-1-0",
+  "_nodeVersion": "7.0.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/ddv-server-mustache-1-0-0.0.10.tgz_1483614128823_0.6869442735332996"
+  },
+  "_npmUser": {
+    "name": "yuchonghua",
+    "email": "yuchonghua@163.com"
+  },
+  "_npmVersion": "3.10.8",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "ddv-server-mustache-1-0@~0.0.10",
+    "scope": null,
+    "escapedName": "ddv-server-mustache-1-0",
+    "name": "ddv-server-mustache-1-0",
+    "rawSpec": "~0.0.10",
+    "spec": ">=0.0.10 <0.1.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ddv-server-mustache-1-0/-/ddv-server-mustache-1-0-0.0.10.tgz",
+  "_shasum": "8d82cb2a95747eebcebb9ff5149e34663c7a9a60",
+  "_shrinkwrap": null,
+  "_spec": "ddv-server-mustache-1-0@~0.0.10",
+  "_where": "/Users/hua/Documents/其他项目/warderCdn",
+  "bin": {
+    "ddv_mustache": "./bin/ddv_mustache.js"
+  },
+  "bugs": {
+    "url": "https://github.com/ddvs/ddv-server-mustache-1-0/issues"
+  },
+  "dependencies": {
+    "cjb-base": ">=0.0.35",
+    "colors": "~1.1.2",
+    "crypto-js": ">=3.1.6",
+    "ddv-worker": ">=0.0.4",
+    "etag": ">=1.7.0",
+    "jsdom": ">=9.5.0",
+    "mime": ">=1.3.4",
+    "requirejs": ">=2.3.2"
+  },
+  "description": "ddv-server-mustache-1-0 is a mustache and requirejs based on the development of ddv expansion module, using the server + browser rendering mode to support ie low version browser",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "8d82cb2a95747eebcebb9ff5149e34663c7a9a60",
+    "tarball": "https://registry.npmjs.org/ddv-server-mustache-1-0/-/ddv-server-mustache-1-0-0.0.10.tgz"
+  },
+  "homepage": "https://github.com/ddvs/ddv-server-mustache-1-0#readme",
+  "jshintConfig": {
+    "esversion": 6,
+    "undef": true,
+    "unused": true,
+    "node": true,
+    "predef": [
+      "module",
+      "require",
+      "console",
+      "process"
+    ]
+  },
+  "keywords": [
+    "ddv-server-mustache-1-0",
+    "ddv",
+    "ddvservser",
+    "server"
+  ],
+  "license": "MIT",
+  "main": "lib/run.js",
+  "maintainers": [
+    {
+      "name": "yuchonghua",
+      "email": "yuchonghua@163.com"
+    }
+  ],
+  "name": "ddv-server-mustache-1-0",
+  "optionalDependencies": {},
+  "preferGlobal": false,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddvs/ddv-server-mustache-1-0.git"
+  },
+  "scripts": {
+    "build": "ddv_mustache build",
+    "dev": "ddv_mustache",
+    "generate": "ddv_mustache generate",
+    "start": "ddv_mustache start"
+  },
+  "version": "0.0.10"
+}
