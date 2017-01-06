@@ -49,8 +49,10 @@ switch(cmd)
 //开始运行
 switch(cmd)
 {
+	case 'build':
+		console.log('开发中');
+	break;
 	case 'start':
-	case 'generate':
 	case 'dev':
 		//修改环境变量
 		process.env.NODE_ENV = DEBUG ? 'development' : 'production' ;
