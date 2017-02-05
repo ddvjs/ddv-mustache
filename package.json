@@ -1,6 +1,6 @@
 {
   "bin": {
-    "ddv_mustache": "./bin/ddv_mustache.js"
+    "ddv_mustache": "./bin/ddv_mustache"
   },
   "bugs": {
     "url": "https://github.com/ddvs/ddv-server-mustache-1-0/issues"
@@ -16,7 +16,13 @@
     "requirejs": ">=2.3.2"
   },
   "description": "ddv-server-mustache-1-0 is a mustache and requirejs based on the development of ddv expansion module, using the server + browser rendering mode to support ie low version browser",
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-eslint": "^7.0.1",
+    "eslint": "^3.14.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1"
+  },
   "directories": {},
   "homepage": "https://github.com/ddvs/ddv-server-mustache-1-0#readme",
   "jshintConfig": {
@@ -56,7 +62,11 @@
     "build": "ddv_mustache build",
     "dev": "ddv_mustache",
     "generate": "ddv_mustache generate",
-    "start": "ddv_mustache start"
+    "start": "ddv_mustache start",
+    "lint": "eslint --ext .js lib",
+    "test": "npm run lint",
+    "precommit": "npm run lint",
+    "prepublish": "npm run lint"
   },
   "version": "0.0.13"
 }
