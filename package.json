@@ -68,5 +68,5 @@
     "precommit": "npm run lint",
     "prepublish": "npm run lint"
   },
-  "version": "0.0.13"
+  "version": "0.0.14"
 }
