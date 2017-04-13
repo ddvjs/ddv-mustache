@@ -1,6 +1,7 @@
 {
   "bin": {
-    "ddv_mustache": "./bin/ddv_mustache"
+    "ddv_mustache": "./bin/ddv_mustache",
+    "ddv-server-mustache": "./bin/ddv-server-mustache"
   },
   "bugs": {
     "url": "https://github.com/ddvs/ddv-server-mustache-1-0/issues"
@@ -44,7 +45,7 @@
     "server"
   ],
   "license": "MIT",
-  "main": "lib/run.js",
+  "main": "lib2/run.js",
   "maintainers": [
     {
       "name": "yuchonghua",

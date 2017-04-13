@@ -55,6 +55,6 @@ switch (cmd) {
     // 修改环境变量
     process.env.NODE_ENV = DEBUG ? 'development' : 'production'
     // 调试模式
-    require('../lib2/index.js')
+    require('../lib/ddv-server-mustache.js')
     break
 }
