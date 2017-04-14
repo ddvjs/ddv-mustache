@@ -2,21 +2,76 @@
 
 const path = require('path')
 const webpack = require('webpack')
-const config = require('./webpack.base.js')
 const logger = require('./logger')
 const dirRoot = path.resolve(__dirname, '../')
 const entry = Object.create(null)
 const nodeExternals = require('webpack-node-externals')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
-entry.base = config.entry || Object.create(null)
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 let compiler, compilerWatch, isDev
 isDev = process.argv.indexOf('build') === -1
 logger.log('Loading...')
 logger.log('isDev : ' + (isDev ? 'true' : 'false'))
-config.output.path = path.resolve(dirRoot, 'lib')
-config.plugins = Array.isArray(config.plugins) ? config.plugins : []
-config.plugins.push(new ProgressBarPlugin())
-console.log(nodeExternals())
+const webpackConfig = {
+  entry: {
+  },
+  target: 'node',
+  devtool: 'source-map',
+  output: {
+    path: path.resolve(dirRoot, 'lib'),
+    filename: '[name]/index.js',
+    chunkFilename: '[name].[id]/index.js',
+    libraryTarget: 'commonjs2'
+  },
+  resolve: {
+    extensions: [
+      '.js',
+      '.json'
+    ],
+    alias: {
+    },
+    modules: [
+      'node_modules'
+    ]
+  },
+  externals: [
+    nodeExternals()
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        query: {
+          plugins: [
+            'transform-async-to-generator',
+            'array-includes',
+            'transform-runtime'
+          ],
+          presets: [
+            ['es2015', { modules: false }],
+            'stage-2'
+          ],
+          cacheDirectory: true
+        }
+      }
+    ]
+  },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: 'src/ddv-server-mustache.js', to: 'ddv-server-mustache.js' }
+      // { from: 'lib/app', to: 'app' },
+      // { from: 'lib/views', to: 'views' }
+    ]),
+    new ProgressBarPlugin()
+  ]
+}
+entry.base = webpackConfig.entry || Object.create(null)
 
 // Hack: remove extract-text-webpack-plugin log
 const cleanStats = function (stats) {
@@ -31,8 +86,8 @@ if (isDev) {
   // production
   getEntry()
   .then(entry => {
-    config.entry = entry
-    compiler = webpack(config)
+    webpackConfig.entry = entry
+    compiler = webpack(webpackConfig)
     compiler.plugin('done', stats => {
       cleanStats(stats)
       logger.success('完成')
@@ -78,10 +133,10 @@ function watchChangeDev () {
   })
   .then(function (entry) {
     // 获取入口列表
-    config.entry = entry
+    webpackConfig.entry = entry
     logger.log('webpack watch runing...')
     // 实例化webpack
-    compiler = webpack(config)
+    compiler = webpack(webpackConfig)
 
     compiler.plugin('done', stats => {
       cleanStats(stats)
@@ -108,8 +163,7 @@ function watchChangeDev () {
 }
 function getEntry () {
   var obj = Object.assign(Object.create(null), entry.base, {
-    'server': './src/server',
-    'ddv-server-mustache': './src/ddv-server-mustache'
+    'server': './src/server'
   })
   return Promise.resolve(obj)
 }

@@ -2,60 +2,113 @@
 'use strict'
 // 标题
 process.title = 'ddvMustache'
-const logger = require('../build/logger')
+const defaultCommand = 'dev'
+const fs = require('fs')
+const path = require('path')
+const DdvMustache = require('../ddv-mustache')
+const rootDir = path.resolve('.', './')
+const without = require('lodash').without
 
-// 默认
-var defaultCommand = 'dev'
-var commands = [
-  defaultCommand,
-  'init',
-  'build',
+// --analyze option
+var analyzeBuild = false
+if (process.argv.indexOf('--analyze') !== -1 || process.argv.indexOf('-a') !== -1) {
+  analyzeBuild = true
+  process.argv = without(process.argv, '--analyze', '-a')
+}
+
+var siteConfigFileName = 'site.config.js'
+
+// --config-file option
+var indexOfConfig = false
+if (process.argv.indexOf('--config-file') !== -1) {
+  indexOfConfig = process.argv.indexOf('--config-file')
+} else if (process.argv.indexOf('-c') !== -1) {
+  indexOfConfig = process.argv.indexOf('-c')
+}
+
+if (indexOfConfig !== false) {
+  siteConfigFileName = process.argv.slice(indexOfConfig)[1]
+  process.argv = without(process.argv, '--config-file', '-c', siteConfigFileName)
+}
+
+// 尝试获取配置文件地址
+var siteConfigFile = path.resolve(rootDir, siteConfigFileName)
+if (!fs.existsSync(siteConfigFile) && siteConfigFileName !== 'site.config.js') {
+  siteConfigFileName = 'site.config.js'
+  // 再次参数获取
+  siteConfigFile = path.resolve(rootDir, siteConfigFileName)
+}
+if (!fs.existsSync(siteConfigFile) && siteConfigFileName !== 'ddv.config.js') {
+  // 再次参数获取
+  siteConfigFile = path.resolve(rootDir, 'ddv.config.js')
+}
+
+var options = {}
+if (fs.existsSync(siteConfigFile)) {
+  options = require(siteConfigFile)
+} else {
+  console.log(`Could not locate ${siteConfigFile}`) // eslint-disable-line no-console
+}// 引入配置信息-Import and Set Nuxt.js options
+
+if (typeof options.rootDir !== 'string') {
+  options.rootDir = rootDir
+}
+options.dev = false // Create production build when calling `nuxt build`
+
+options.build = options.build || {}
+if (analyzeBuild) {
+  options.build.analyze = analyzeBuild
+}
+
+const commands = new Set([
   'start',
+  'ddvstart',
+  'dev',
+  'ddvdev',
+  'build',
   'generate'
-]
-
+])
 var cmd = process.argv[2]
-if (!cmd) {
+if (commands.has(cmd)) {
+  process.argv.splice(2, 1)
+} else {
   cmd = defaultCommand
 }
-if (commands.indexOf(cmd) < 0) {
-  logger.error('This command is not supported')
+var ddvMustache
+if (cmd === 'build' || cmd === 'generate' || cmd === 'start' || cmd === 'ddvstart') {
+  process.env.NODE_ENV = 'production' // development
+  options.dev = false // Create production build when calling `ddvMustache build`
+} else {
+  options.dev = true
+}
+// 编译模式
+if (cmd === 'build') {
+  console.log('[ddvMustache] Building...') // eslint-disable-line no-console
+  ddvMustache = new DdvMustache(options)
+  ddvMustache.build()
+  .then(() => {
+    console.log('[ddvMustache] Building done') // eslint-disable-line no-console
+  })
+  .catch((err) => {
+    console.error(err) // eslint-disable-line no-console
+    process.exit(1)
+  })
+// 生成模式
+} else if (cmd === 'generate') {
+  console.log('[ddvMustache] Generating...') // eslint-disable-line no-console
+  ddvMustache = new DdvMustache(options)
+  ddvMustache.generate()
+  .then(() => {
+    console.log('[ddvMustache] Generate done') // eslint-disable-line no-console
+  })
+  .catch((err) => {
+    console.error(err) // eslint-disable-line no-console
+    process.exit(1)
+  })
+} else if (cmd === 'start' || cmd === 'ddvstart' || cmd === 'dev' || cmd === 'ddvdev') {
+  let server = require('../server')
+  server.serverStart(siteConfigFile, options)
+} else {
+  console.error('This parameter is not supported')
   process.exit(1)
-}
-var DEBUG = process.env.NODE_ENV === 'development' || false
-switch (cmd) {
-  case 'init':
-    break
-  case 'build':
-    // 非调试模式
-    DEBUG = false
-    break
-  case 'start':
-    // 非调试模式
-    DEBUG = false
-    break
-  case 'generate':
-    // 非调试模式
-    DEBUG = false
-    break
-  // case 'dev':
-  default:
-    // 默认命令
-    cmd = 'dev'
-    // 调试模式
-    DEBUG = true
-    break
-}
-// 开始运行
-switch (cmd) {
-  case 'build':
-    logger.log('开发中')
-    break
-  case 'start':
-  case 'dev':
-    // 修改环境变量
-    process.env.NODE_ENV = DEBUG ? 'development' : 'production'
-    // 调试模式
-    require('../lib/ddv-server-mustache')
-    break
 }
