@@ -2,10 +2,11 @@
 'use strict'
 // 标题
 process.title = 'ddvMustache'
+const logger = require('../build/logger')
 
 // 默认
-let defaultCommand = 'dev'
-let commands = [
+var defaultCommand = 'dev'
+var commands = [
   defaultCommand,
   'init',
   'build',
@@ -13,15 +14,15 @@ let commands = [
   'generate'
 ]
 
-let cmd = process.argv[2]
+var cmd = process.argv[2]
 if (!cmd) {
   cmd = defaultCommand
 }
 if (commands.indexOf(cmd) < 0) {
-  console.error('This command is not supported')
+  logger.error('This command is not supported')
   process.exit(1)
 }
-let DEBUG = process.env.NODE_ENV === 'development' || false
+var DEBUG = process.env.NODE_ENV === 'development' || false
 switch (cmd) {
   case 'init':
     break
@@ -48,13 +49,13 @@ switch (cmd) {
 // 开始运行
 switch (cmd) {
   case 'build':
-    console.log('开发中')
+    logger.log('开发中')
     break
   case 'start':
   case 'dev':
     // 修改环境变量
     process.env.NODE_ENV = DEBUG ? 'development' : 'production'
     // 调试模式
-    require('../lib/ddv-server-mustache.js')
+    require('../lib/ddv-server-mustache')
     break
 }
