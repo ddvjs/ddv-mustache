@@ -2,7 +2,7 @@
 // express模块
 const express = require('express')
 // 日子模块
-const logger = require('../../logger')
+// const logger = require('../../logger')
 // 导出
 module.exports = Object.assign(renderInit, {
   renderQueueRun,
