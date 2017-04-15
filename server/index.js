@@ -13,7 +13,7 @@ var siteConfigFile = null
 worker.server = http.createServer(app)
 
 // 创建编译器的方法
-function createNuxtRender () {
+function createDdvRender () {
   return (ddvMustache && ddvMustache.close ? ddvMustache.close() : Promise.resolve())
   .then(() => {
     // 删除旧的配置
@@ -47,10 +47,10 @@ worker.serverStart = function serverStart (siteConfigFileInput, configInput) {
   .on('all', function () {
     console.log('You have modified the configuration information and are recompiling')
     // 重新创建编译器
-    createNuxtRender()
+    createDdvRender()
   })
   // 创建编译器
-  createNuxtRender().then(() => {
+  createDdvRender().then(() => {
     if (config.dev) {
       // 使用ddvMustache插件
       app.use(function (res, req, next) {
