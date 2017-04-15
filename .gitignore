@@ -44,3 +44,5 @@ lib
 .svn
 
 .git
+
+yarn.lock
