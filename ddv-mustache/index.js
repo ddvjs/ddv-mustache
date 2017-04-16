@@ -3,6 +3,7 @@ const _ = require('lodash')
 const build = require('./build')
 const generate = require('./generate')
 const renderInit = require('./render')
+const path = require('path')
 
 class DdvMustache {
   constructor (options = {}) {
@@ -20,6 +21,8 @@ class DdvMustache {
     this.dev = this.options.dev
     // 根目录
     this.dir = (typeof options.rootDir === 'string' && options.rootDir ? options.rootDir : process.cwd())
+    // 编译根目录
+    this.buildDir = path.resolve(this.dir, '.ddvMustacheBuild')
     // 导出生成方法
     this.generate = generate.bind(this)
     // 初始化渲染

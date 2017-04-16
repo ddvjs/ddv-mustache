@@ -15,7 +15,8 @@
     "express": "~4.14.0",
     "jsdom": ">=9.9.1",
     "mime": ">=1.3.4",
-    "requirejs": ">=2.3.2"
+    "requirejs": ">=2.3.2",
+    "lodash": "^4.17.4"
   },
   "description": "ddv-server-mustache-1-0 is a mustache and requirejs based on the development of ddv expansion module, using the server + browser rendering mode to support ie low version browser",
   "devDependencies": {

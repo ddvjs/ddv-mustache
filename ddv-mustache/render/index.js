@@ -1,6 +1,9 @@
 'use strict'
 // express模块
 const express = require('express')
+// 文件
+const fs = require('fs')
+const buildRender = require('../buildRender')
 // 日子模块
 // const logger = require('../../logger')
 // 导出
@@ -89,6 +92,18 @@ function renderNextTick (self, args) {
   })
 }
 // 渲染
+function renderBaseError (req, res, e) {
+  var html = '<pre>' + e.stack + '</pre>'
+  res.statusCode = 500
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  res.setHeader('Content-Length', Buffer.byteLength(html))
+  res.end(html, 'utf8')
+}
+// 渲染
 function render (req, res, next) {
-  next()
+  if (!(this.buildDir && fs.existsSync(this.buildDir))) {
+    renderBaseError(req, res, new Error('If you have not compiled the rendering file, run npm run build'))
+    return
+  }
+  buildRender.call(this, req, res, next)
 }
