@@ -3,20 +3,24 @@
 const express = require('express')
 // 文件
 const fs = require('fs')
+const path = require('path')
 const buildRender = require('../buildRender')
+// 域
+// eslint-disable-next-line
+const domain = require('domain')
 // 日子模块
-// const logger = require('../../logger')
+const logger = require('../../build/logger')
 // 导出
 module.exports = Object.assign(renderInit, {
   renderQueueRun,
-  renderMiddleware,
+  renderWaitMiddleware,
   render
 })
 // 渲染中间件
-function renderMiddleware (req, res, next) {
+function renderWaitMiddleware (req, res, next) {
   if (this && this.renderQueue && Array.isArray(this.renderQueue)) {
     // 插入队列中
-    this.renderQueue.push([req, res, next])
+    this.renderQueue.push(next)
   }
   // 如果存在队列运行方法就运行
   this.renderQueueRun && this.renderQueueRun()
@@ -36,13 +40,13 @@ function renderQueueRun (isNextTick) {
   }
   // 渲染器是否已经加载结束
   if (!this.isBuildIng) {
-    var args
+    var next
     // 循环运行队列中的代渲染请求
-    while (this.renderQueue && (args = this.renderQueue.splice(0, 1)) && args.length > 0 && (args = args[0])) {
+    while (this.renderQueue && (next = this.renderQueue.splice(0, 1)) && next.length > 0 && (next = next[0])) {
       // 正式渲染
-      renderNextTick(this, args)
+      renderWaitNextTick(next)
     }
-    args = void 0
+    next = void 0
   }
 }
 // 渲染初始化
@@ -56,44 +60,49 @@ function renderInit () {
   // 运行方法
   this.renderQueueRun = renderQueueRun.bind(this)
 
+  // 渲染阻塞器
+  this.render.use(renderDomainMiddleware.bind(this))
+  // 渲染阻塞器
+  this.render.use(renderWaitMiddleware.bind(this))
+  // 根目录下的static优先
+  this.render.use(serve.call(this, path.join(this.dir, '/static'), true))
+
   // 使用渲染模块
-  // this.render.use(renderDomainMiddleware.bind(this))
-  // 使用渲染模块
-  this.render.use(renderMiddleware.bind(this))
+  this.render.use(render.bind(this))
+  // 编译生成的静态资源
+  this.render.use('/static', serve.call(this, path.join(this.buildDir, '/dist/static'), true))
+  // 编程导出
+  this.render.use(serve.call(this, path.join(this.buildDir, '/dist'), true))
+}
+
+const serve = function (path, cache) {
+  return express.static(path, {
+    maxAge: cache && (!this.dev) ? 60 * 60 * 24 * 30 : 0
+  })
 }
 
 // 渲染中间件
-/* function renderDomainMiddleware (req, res, next) {
+function renderDomainMiddleware (req, res, next) {
   var d = domain.create()
   // 监听domain的错误事件
   d.on('error', function (err) {
-    logger.error(err)
     res.statusCode = 500
-    res.json({sucess: false, messag: '服务器异常'})
+    renderBaseError(req, res, err)
     d.dispose()
   })
 
   d.add(req)
   d.add(res)
   d.run(next)
-  if (this && this.renderDomains && Array.isArray(this.renderDomains)) {
+  /* if (this && this.renderDomains && Array.isArray(this.renderDomains)) {
     this.renderDomains.push(d)
-  }
+  } */
   d = void 0
-} */
-// 渲染放到下一进程，同时监听错误
-function renderNextTick (self, args) {
-  // 放到下一进程
-  process.nextTick(function () {
-    // 渲染正式运行
-    render.apply(self, args)
-    // 释放
-    self = args = void 0
-  })
 }
 // 渲染
-function renderBaseError (req, res, e) {
-  var html = '<pre>' + e.stack + '</pre>'
+function renderBaseError (req, res, err) {
+  logger.error(err)
+  var html = '<pre>' + err.stack + '</pre>'
   res.statusCode = 500
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
   res.setHeader('Content-Length', Buffer.byteLength(html))
@@ -106,4 +115,14 @@ function render (req, res, next) {
     return
   }
   buildRender.call(this, req, res, next)
+}
+// 渲染放到下一进程，同时监听错误
+function renderWaitNextTick (next) {
+  // 放到下一进程
+  process.nextTick(function () {
+    // 渲染正式运行
+    next && next()
+    // 释放
+    next = void 0
+  })
 }

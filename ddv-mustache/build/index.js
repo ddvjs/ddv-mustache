@@ -2,6 +2,7 @@
 const logger = require('../../build/logger')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const webpackConfigBase = require('./webpack.base.js')
+const getEntryAndCopyPath = require('./getEntryAndCopyPath.js')
 const webpack = require('webpack')
 const path = require('path')
 const loggerConfig = {
@@ -11,13 +12,9 @@ const loggerConfig = {
   hash: false,
   version: false
 }
-webpackConfigBase.plugins.push(
-  new CopyWebpackPlugin([
-    { from: path.resolve(__dirname, '../ddvstatic'), to: 'ddvstatic' }
-    // { from: 'lib/app', to: 'app' },
-    // { from: 'lib/views', to: 'views' }
-  ])
-)
+const copyWebpackPath = []
+// 默认复制这个
+copyWebpackPath.push({ from: path.resolve(__dirname, '../ddvstatic'), to: 'ddvstatic' })
 
 module.exports = function buildExports () {
   this.isBuildIng = true
@@ -38,7 +35,7 @@ module.exports = function buildExports () {
 }
 function build () {
   this.webpackConfig = Object.assign(Object.create(null), webpackConfigBase)
-  this.webpackConfig.output.path = this.buildDir
+  this.webpackConfig.output.path = path.join(this.buildDir, 'dist')
 
   this._entry = this._entry || Object.create(null)
   this._entry.base = this.webpackConfig.entry || Object.create(null)
@@ -48,9 +45,11 @@ function build () {
     return watchChangeDev.call(this)
   } else {
     // production
-    return getEntry.call(this)
-      .then(entry => {
+    return getEntryAndCopyPath(this, (this && this._entry && this._entry.base), copyWebpackPath)
+      .then(({entry, copyPath}) => {
         this.webpackConfig.entry = entry
+        // 复制代码插件
+        pushCopyWebpackPlugin(this.webpackConfig.plugins, copyPath)
         this._compiler = webpack(this.webpackConfig)
         this._compiler.plugin('done', stats => {
           cleanStats(stats)
@@ -81,7 +80,6 @@ const cleanStats = function (stats) {
   )
 }
 function watchChangeDev () {
-  console.log('333')
   return new Promise((resolve, reject) => {
     if (this._compilerWatch && this._compilerWatch.close) {
       // 关闭原有的webpack 监听
@@ -95,11 +93,13 @@ function watchChangeDev () {
     }
   })
   .then(() => {
-    return getEntry.call(this)
+    return getEntryAndCopyPath(this, (this && this._entry && this._entry.base), copyWebpackPath)
   })
-  .then((entry) => {
+  .then(({entry, copyPath}) => {
     // 获取入口列表
     this.webpackConfig.entry = entry
+    // 复制代码插件
+    pushCopyWebpackPlugin(this.webpackConfig.plugins, copyPath)
     logger.log('webpack watch runing...')
     // 实例化webpack
     this._compiler = webpack(this.webpackConfig)
@@ -120,10 +120,13 @@ function watchChangeDev () {
     })
   })
 }
-function getEntry () {
-  var obj = Object.assign(Object.create(null), ((this && this._entry && this._entry.base) || Object.create(null)), {
-    'admin/styles/login': './app/admin/styles/login.css'
-
-  })
-  return Promise.resolve(obj)
+function pushCopyWebpackPlugin (plugins, copyPath) {
+  var i
+  for (i = 0; i < plugins.length; i++) {
+    if (plugins[i] instanceof CopyWebpackPlugin) {
+      plugins.splice(i--, 1)
+    }
+  }
+  plugins.push(new CopyWebpackPlugin(copyPath))
+  i = plugins = copyPath = void 0
 }
