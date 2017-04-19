@@ -35,7 +35,7 @@ module.exports = function buildExports () {
 }
 function build () {
   this.webpackConfig = Object.assign(Object.create(null), webpackConfigBase)
-  this.webpackConfig.output.path = path.join(this.buildDir, 'dist')
+  this.webpackConfig.output.path = this.buildDistDir
 
   this._entry = this._entry || Object.create(null)
   this._entry.base = this.webpackConfig.entry || Object.create(null)

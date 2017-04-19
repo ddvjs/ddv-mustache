@@ -23,6 +23,8 @@ class DdvMustache {
     this.dir = (typeof options.rootDir === 'string' && options.rootDir ? options.rootDir : process.cwd())
     // 编译根目录
     this.buildDir = path.resolve(this.dir, '.ddvMustacheBuild')
+    // 编译根目录
+    this.buildDistDir = path.resolve(this.buildDir, './dist')
     // 应用程序根目录
     this.appDir = path.join(this.dir, (options.appDir || 'app'))
     // 导出生成方法

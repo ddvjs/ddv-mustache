@@ -73,6 +73,7 @@ function getCopyPathByGlob (self, cache) {
     buildUtil.getPathByGlob('/*/models/', options),
     buildUtil.getPathByGlob('/*/libraries/', options),
     buildUtil.getPathByGlob('/*/images/', options),
+    buildUtil.getPathByGlob('/*/config/', options),
     buildUtil.getPathByGlob('/*/fonts/', options)
   ])
   .then(res => {

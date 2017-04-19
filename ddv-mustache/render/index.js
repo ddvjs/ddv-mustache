@@ -5,11 +5,10 @@ const express = require('express')
 const fs = require('fs')
 const path = require('path')
 const buildRender = require('../buildRender')
+const renderBaseError = require('./renderBaseError.js')
 // 域
 // eslint-disable-next-line
 const domain = require('domain')
-// 日子模块
-const logger = require('../../build/logger')
 // 导出
 module.exports = Object.assign(renderInit, {
   renderQueueRun,
@@ -59,6 +58,7 @@ function renderInit () {
   this.renderQueue = []
   // 运行方法
   this.renderQueueRun = renderQueueRun.bind(this)
+  this.renderDistMiddleware = serve.call(this, path.join(this.buildDir, '/dist'), true)
 
   // 渲染阻塞器
   this.render.use(renderDomainMiddleware.bind(this))
@@ -72,7 +72,7 @@ function renderInit () {
   // 编译生成的静态资源
   this.render.use('/static', serve.call(this, path.join(this.buildDir, '/dist/static'), true))
   // 编程导出
-  this.render.use(serve.call(this, path.join(this.buildDir, '/dist'), true))
+  this.render.use(this.renderDistMiddleware)
 }
 
 const serve = function (path, cache) {
@@ -98,15 +98,6 @@ function renderDomainMiddleware (req, res, next) {
     this.renderDomains.push(d)
   } */
   d = void 0
-}
-// 渲染
-function renderBaseError (req, res, err) {
-  logger.error(err)
-  var html = '<pre>' + err.stack + '</pre>'
-  res.statusCode = 500
-  res.setHeader('Content-Type', 'text/html; charset=utf-8')
-  res.setHeader('Content-Length', Buffer.byteLength(html))
-  res.end(html, 'utf8')
 }
 // 渲染
 function render (req, res, next) {
