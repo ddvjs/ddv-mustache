@@ -119,7 +119,8 @@ function runController (req, res, c) {
     if (!c.model) {
       return
     }
-    console.log('c.model', c.model)
+    return load.models(req, res)
+    .then(m => { c.model = m })
   })
   .then(() => {
     // 创建加载容器
@@ -192,7 +193,42 @@ function runController (req, res, c) {
     }
   })
   .then(() => {
+    return new Promise(resolve => {
+      var event = req.window.$.Event('sysBaseRun', b.inherit(null))
+        // 等待触发处理结束
+      c.body.one('sysBaseRunEnd', function () {
+        resolve()
+      }).trigger(event)
+        // 触发预处理事件
+      if (event.result !== false) {
+        c.body.trigger('sysBaseRunEnd')
+      }
+      event = void 0
+    })
+  })
+  .then(() => {
+    return new Promise(resolve => {
+      var events
+      if (c && c.body && c.body[0]) {
+        events = c.body.data('events') || req.window.$._data(c.body[0], 'events') || {}
+        if (!events.noderun) {
+          resolve()
+        } else {
+          events = c.body.data('events') || req.window.$._data(c.body[0], 'events') || {}
+          // 等待触发处理结束
+          c.body.one('nodeend', function () {
+            resolve()
+          // 触发预处理事件
+          }).trigger('noderun')
 
+          if (!events.noderun) {
+            c.body.trigger('nodeend')
+          }
+        }
+      } else {
+        resolve()
+      }
+    })
   })
   .then(() => {
     console.log('c', c)

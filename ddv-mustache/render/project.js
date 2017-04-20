@@ -11,6 +11,7 @@ function renderProject (req, res, next) {
   }
   load.router.dev = this.dev
   load.controller.dev = this.dev
+  load.models.dev = this.dev
   load.views.dev = this.dev
   load.baseHtml.dev = this.dev
   load.JQuery.dev = this.dev
