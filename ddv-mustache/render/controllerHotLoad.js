@@ -168,7 +168,7 @@ function runControllerHotLoad (project, req, res, next) {
     delete config.loadlistsNew
   })
   .then(() => {
-    config.pathinfo = {dir: req.project.pathinfo}
+    config.pathinfo = {dir: project.pathinfo}
     config.appConfig = req.appConfig || b.inherit(null)
     res.write('loadLists["config"] = c = ' + renderControllerHotLoad.toJSON(config) + ';' + br)
   })
@@ -176,7 +176,6 @@ function runControllerHotLoad (project, req, res, next) {
     return new Promise(resolve => {
       let i = 0
       let load = (name, path, isDdvstatic) => {
-        console.log('path', path, 'isDdvstatic', isDdvstatic)
         if (isDdvstatic) {
           if (['/js/sys/cjb-base.js', '/js/sys/cjb-base.js.map', '/js/sys/cjb-base.source.js'].indexOf(path) > -1) {
             try {
@@ -201,11 +200,10 @@ function runControllerHotLoad (project, req, res, next) {
       }
       let fn = () => {
         let name = loadlists[i++] || null
-        console.log(name)
         if (name) {
           let p = (config.paths[name] || name) + '.js'
           let p2 = p.substr(0, 2)
-          let rootp = req.project.rootdir
+          let rootp = path.join(this.appDir, project.pathinfo.base)
 
           // 处理
           switch (p2) {
