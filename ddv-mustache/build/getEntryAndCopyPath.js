@@ -69,6 +69,7 @@ function getCopyPathByGlob (self, cache) {
   }
   return Promise.all([
     buildUtil.getPathByGlob('/*/controllers/', options),
+    buildUtil.getPathByGlob('/*/views/', options),
     buildUtil.getPathByGlob('/*/core/', options),
     buildUtil.getPathByGlob('/*/models/', options),
     buildUtil.getPathByGlob('/*/libraries/', options),
