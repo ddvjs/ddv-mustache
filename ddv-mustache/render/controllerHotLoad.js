@@ -244,6 +244,7 @@ function runControllerHotLoad (project, req, res, next) {
           resolve()
         }
       }
+      fn()
     })
   })
   .then(() => {
