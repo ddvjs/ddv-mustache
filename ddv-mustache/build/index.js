@@ -14,7 +14,7 @@ const loggerConfig = {
 }
 const copyWebpackPath = []
 // 默认复制这个
-copyWebpackPath.push({ from: path.resolve(__dirname, '../ddvstatic'), to: 'ddvstatic' })
+copyWebpackPath.push({ from: path.resolve(__dirname, '../ddvstatic'), to: '../ddvstatic' })
 
 module.exports = function buildExports () {
   this.isBuildIng = true

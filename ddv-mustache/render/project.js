@@ -1,9 +1,14 @@
 'use strict'
+// 文件
+const fs = require('fs')
 const load = require('../load')
-const express = require('express')
-module.exports = render
-const renderBaseError = require('../render/renderBaseError.js')
-function render (req, res, next) {
+module.exports = renderProject
+const renderError = require('./error.js')
+function renderProject (req, res, next) {
+  if (!(this.buildDir && fs.existsSync(this.buildDir))) {
+    renderError(req, res, new Error('If you have not compiled the rendering file, run npm run build'))
+    return
+  }
   load.router.dev = this.dev
   // 使用 root 路由正则
   load.router(req, this.appDir)
@@ -26,30 +31,15 @@ function render (req, res, next) {
     })
     // 判断是否为项目
     .then(project => {
-      req.project = project || req.project
-      renderRroject.call(this, req, res, next)
-    }, e => next())
+      req.project = project
+    }, e => {
+      req.project = null
+    })
+    .then(() => next())
     // 查找项目
   })
   .catch(err => {
-    renderBaseError.call(this, req, res, err)
+    renderError.call(this, req, res, err)
     // 出错了
   })
-}
-function renderRroject (req, res, next) {
-  if (req.project.isDdvStatic) {
-    // 静态加载
-    var t = express.Router()
-    t.use(req.project.base, this.renderDistMiddleware)
-    t(req, res, next)
-    t = void 0
-    return
-  } else if (req.project.isHotLoad) {
-    // 热加载
-  } else {
-    // 项目
-  }
-  console.log('project', req.project)
-  console.log('pathinfo', req.project.pathinfo.config)
-
 }

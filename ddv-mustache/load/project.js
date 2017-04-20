@@ -69,6 +69,7 @@ module.exports = function getProject (appDir, router) {
       project.pathinfo[dirName] = path.resolve(base, dirName)
     })
     project.pathinfo.url = base + '/'
+    project.router = router
     return project
   })
 }

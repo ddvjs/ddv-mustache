@@ -1,11 +1,12 @@
 'use strict'
 // express模块
 const express = require('express')
-// 文件
-const fs = require('fs')
 const path = require('path')
-const buildRender = require('../buildRender')
-const renderBaseError = require('./renderBaseError.js')
+const renderProject = require('./project.js')
+const renderDdvstatic = require('./ddvstatic.js')
+const renderControllerHotLoad = require('./controllerHotLoad.js')
+const renderController = require('./controller.js')
+const renderError = require('./error.js')
 // 域
 // eslint-disable-next-line
 const domain = require('domain')
@@ -13,7 +14,9 @@ const domain = require('domain')
 module.exports = Object.assign(renderInit, {
   renderQueueRun,
   renderWaitMiddleware,
-  render
+  renderProject,
+  renderDdvstatic,
+  renderControllerHotLoad
 })
 // 渲染中间件
 function renderWaitMiddleware (req, res, next) {
@@ -58,7 +61,8 @@ function renderInit () {
   this.renderQueue = []
   // 运行方法
   this.renderQueueRun = renderQueueRun.bind(this)
-  this.renderDistMiddleware = serve.call(this, path.join(this.buildDir, '/dist'), true)
+  // 渲染ddvstatic
+  this.renderDdvstaticMiddleware = serve.call(this, path.join(this.buildDir, '/ddvstatic'), true)
 
   // 渲染阻塞器
   this.render.use(renderDomainMiddleware.bind(this))
@@ -68,11 +72,25 @@ function renderInit () {
   this.render.use(serve.call(this, path.join(this.dir, '/static'), true))
 
   // 使用渲染模块
-  this.render.use(render.bind(this))
-  // 编译生成的静态资源
-  this.render.use('/static', serve.call(this, path.join(this.buildDir, '/dist/static'), true))
+  this.render.use(renderProject.bind(this))
+  // 使用渲染模块
+  this.render.use(renderDdvstatic.bind(this))
+  // 使用渲染模块
+  this.render.use(renderControllerHotLoad.bind(this))
+  // 使用渲染模块
+  this.render.use(renderController.bind(this))
+
   // 编程导出
-  this.render.use(this.renderDistMiddleware)
+  this.render.use(serve.call(this, path.join(this.buildDir, '/dist'), true))
+  // 编程导出
+  this.render.use((req, res) => {
+    var err = new Error('not find page')
+    err.url = req.url
+    err.path = req.path
+    err.code = 404
+    res.statusCode = 404
+    renderError(req, res, err)
+  })
 }
 
 const serve = function (path, cache) {
@@ -87,7 +105,7 @@ function renderDomainMiddleware (req, res, next) {
   // 监听domain的错误事件
   d.on('error', function (err) {
     res.statusCode = 500
-    renderBaseError(req, res, err)
+    renderError(req, res, err)
     d.dispose()
   })
 
@@ -98,14 +116,6 @@ function renderDomainMiddleware (req, res, next) {
     this.renderDomains.push(d)
   } */
   d = void 0
-}
-// 渲染
-function render (req, res, next) {
-  if (!(this.buildDir && fs.existsSync(this.buildDir))) {
-    renderBaseError(req, res, new Error('If you have not compiled the rendering file, run npm run build'))
-    return
-  }
-  buildRender.call(this, req, res, next)
 }
 // 渲染放到下一进程，同时监听错误
 function renderWaitNextTick (next) {
