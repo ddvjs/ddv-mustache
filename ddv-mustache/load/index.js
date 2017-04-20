@@ -2,8 +2,14 @@
 const router = require('./router.js')
 const project = require('./project.js')
 const controller = require('./controller.js')
+const views = require('./views.js')
+const baseHtml = require('./baseHtml.js')
+const JQuery = require('./JQuery.js')
 module.exports = {
   router,
   project,
-  controller
+  controller,
+  views,
+  baseHtml,
+  JQuery
 }

@@ -10,6 +10,10 @@ function renderProject (req, res, next) {
     return
   }
   load.router.dev = this.dev
+  load.controller.dev = this.dev
+  load.views.dev = this.dev
+  load.baseHtml.dev = this.dev
+  load.JQuery.dev = this.dev
   // 使用 root 路由正则
   load.router(req, this.appDir)
   .then(router => {

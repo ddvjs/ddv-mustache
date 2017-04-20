@@ -8,8 +8,10 @@ const util = module.exports = {
   url,
   requirejs,
   isFile,
+  readFile,
   toUrl,
-  parseUrl
+  parseUrl,
+  clone
 }
 function isFile (path) {
   return new Promise((resolve, reject) => {
@@ -19,6 +21,13 @@ function isFile (path) {
       } else {
         reject(new Error('Not Directory or File'))
       }
+    })
+  })
+}
+function readFile (path) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf-8', (err, html) => {
+      err ? reject(err) : resolve(html)
     })
   })
 }
@@ -53,3 +62,24 @@ function requirejs (routerFile) {
   })
 }
 requirejs.undef = requirejsLib.undef
+requirejs.define = requirejsLib.define
+// 克隆对象
+function clone (obj) {
+  var newobj
+  if (Array.isArray(obj)) {
+    newobj = []
+    obj.forEach(t => {
+      newobj.push(clone(t))
+    })
+  } else if (typeof obj === 'object' && typeof obj !== 'function') {
+    // eslint-disable-next-line no-proto
+    newobj = Object.create(obj.__proto__ || null)
+    var key
+    for (key in obj) {
+      newobj[key] = clone(obj[key])
+    }
+  } else {
+    newobj = obj
+  }
+  return newobj
+}

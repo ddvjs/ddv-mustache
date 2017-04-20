@@ -7,6 +7,7 @@ const renderDdvstatic = require('./ddvstatic.js')
 const renderControllerHotLoad = require('./controllerHotLoad.js')
 const renderController = require('./controller.js')
 const renderError = require('./error.js')
+const NotFindFileError = require('../NotFindFileError.js')
 // 域
 // eslint-disable-next-line
 const domain = require('domain')
@@ -66,10 +67,16 @@ function renderInit () {
 
   // 渲染阻塞器
   this.render.use(renderDomainMiddleware.bind(this))
+  // 配置
+  this.render.use((req, res, next) => {
+    req.appConfig = this.options.config || Object.create(null)
+    next()
+  })
   // 渲染阻塞器
   this.render.use(renderWaitMiddleware.bind(this))
   // 根目录下的static优先
   this.render.use(serve.call(this, path.join(this.dir, '/static'), true))
+  this.render.use('/ddvstatic', this.renderDdvstaticMiddleware)
 
   // 使用渲染模块
   this.render.use(renderProject.bind(this))
@@ -84,12 +91,7 @@ function renderInit () {
   this.render.use(serve.call(this, path.join(this.buildDir, '/dist'), true))
   // 编程导出
   this.render.use((req, res) => {
-    var err = new Error('not find page')
-    err.url = req.url
-    err.path = req.path
-    err.code = 404
-    res.statusCode = 404
-    renderError(req, res, err)
+    renderError(req, res, new NotFindFileError('not find page'))
   })
 }
 
