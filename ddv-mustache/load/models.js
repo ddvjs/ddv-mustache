@@ -6,7 +6,6 @@ const b = require('cjb-base')
 // requirejs
 const requirejs = require('requirejs')
 // apiRESTful
-const apiRESTful = require('../apiRESTful.js')
 
 /**
  * 加载数据模型
@@ -16,14 +15,14 @@ const apiRESTful = require('../apiRESTful.js')
  * @param    {string}                 controllersPath [控制器文件路径]
  * @param    {Function}               callback        [回调]
  */
-const loadModels = module.exports = function loadModels (req, res) {
-  return new Promise((resolve, reject)=>{
+const loadModels = module.exports = function loadModels (appDir, c, req, res) {
+  return new Promise((resolve, reject) => {
     req._controllersModels = Object.create(null)
     let [now, sum, models] = [0, 0, req._controllersModels]
-    b.each((req.controller.model || {}), function (key, filepath) {
+    b.each((c.model || {}), function (key, filepath) {
       sum++
       let file = path.join(req.project.pathinfo.models, (filepath + '.js'))
-      let fileRoot = path.join(req.appRootPath, file)
+      let fileRoot = path.join(appDir, file)
       loadModels.getModelForProxy(fileRoot, req.DEBUG, (e, model) => {
         if (e) {
           let err = new Error('loadModels Error key:' + key + ' path:' + file + '!')
@@ -36,7 +35,7 @@ const loadModels = module.exports = function loadModels (req, res) {
           models[key].prototype = model
           // 对象实例化model
           models[key] = new models[key]()
-          models[key].processApp = req
+          models[key].processApp = [c, req, res]
 
           if ((++now) >= sum) {
             resolve(req._controllersModels)
@@ -141,15 +140,30 @@ loadModels.getModelForProxy = function (fileRoot, isDebug, callback) {
     resolve(ModelsProxy[fileRoot])
   }).run()
 }
+// 使用长连接模块
+const api = require('ddv-restful-api')
 
   // 加载model
 loadModels.__Ajax = function (options, success, error) {
-  apiRESTful.api(options.path || '/').setConn(this._API.__M.processApp).method(options.type || 'GET').headers(options.headers || {}).sendData(options.data || {}).done(function (res) {
-    success(res)
-  })
-    .fail(function (msg, error_id, e) {
-      error(msg, e)
-    })
+  let [c, req, res] = this._API.__M.processApp
+  // 设置默认请求域名
+  api.setBaseUrl(req.appConfig.urlapi.model)
+  console.log('req.appConfig.model',req.appConfig.urlapi.model)
+
+  // api.setBaseUrl('http://api.unicomvideo.ping-qu.com/')
+  // api.setBaseUrl('http://api.salevideo.ping-qu.com/')
+  // 自定义头前缀
+  api.setHeadersPrefix('x-hz-')
+  // 是否长期会话
+  api.setLongStorage(false)
+  // 设置会话初始化最大自动尝试次数，默认3次
+  api.setSessionInitTrySum(3)
+  // 设置初始化session的path，默认/session/init
+  api.setSessionInitPath(req.appConfig.urlapi.session_init || '/session/init')
+
+  api(options.path || '/', req, res).method(options.type || 'GET').headers(options.headers || {}).sendData(options.data || {})
+  .then(res => console.log('ss',res)||success(res))
+  .catch(e => error(e.message, e))
 }
   // 主要是深度克隆，防止对象被引用，导致数据污染
 loadModels.ModelProxyArgs = function (args) {
@@ -222,7 +236,7 @@ MBP.error = function (msg, error_id, data) {
     errorEvent.error_id = error_id
     errorEvent.error_data = data || error
     errorEvent.error = error
-    if (this.__M.processApp.appNode.trigger('modelError', true, errorEvent).result !== false) {
+    if (this.__M.processApp[0].body.trigger('modelError', true, errorEvent).result !== false) {
       throw error
     }
     errorEvent = undefined
@@ -292,7 +306,7 @@ MBAP.send = function (options) {
       errorEvent.error_id = error.error_id
       errorEvent.error_data = data || error
       errorEvent.error = error
-      if (_this._API.__M.processApp.appNode.trigger('modelError', true, errorEvent).result !== false) {
+      if (_this._API.__M.processApp[0].body.trigger('modelError', true, errorEvent).result !== false) {
         throw error
       }
     }

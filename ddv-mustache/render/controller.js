@@ -119,7 +119,7 @@ function runController (req, res, c) {
     if (!c.model) {
       return
     }
-    return load.models(req, res)
+    return load.models(this.appDir, c, req, res)
     .then(m => { c.model = m })
   })
   .then(() => {
