@@ -1,10 +1,9 @@
 {
   "bin": {
-    "ddv_mustache": "./bin/ddv_mustache",
     "ddv-server-mustache": "./bin/ddv-server-mustache"
   },
   "bugs": {
-    "url": "https://github.com/ddvs/ddv-server-mustache-1-0/issues"
+    "url": "https://github.com/ddvs/ddv-server-mustache/issues"
   },
   "dependencies": {
     "cjb-base": ">=0.0.35",
@@ -18,7 +17,7 @@
     "requirejs": ">=2.3.2",
     "lodash": "^4.17.4"
   },
-  "description": "ddv-server-mustache-1-0 is a mustache and requirejs based on the development of ddv expansion module, using the server + browser rendering mode to support ie low version browser",
+  "description": "ddv-server-mustache is a mustache and requirejs based on the development of ddv expansion module, using the server + browser rendering mode to support ie low version browser",
   "devDependencies": {
     "babel-eslint": "^7.2.1",
     "buble-loader": "^0.4.1",
@@ -57,7 +56,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "directories": {},
-  "homepage": "https://github.com/ddvs/ddv-server-mustache-1-0#readme",
+  "homepage": "https://github.com/ddvs/ddv-server-mustache#readme",
   "jshintConfig": {
     "esversion": 6,
     "undef": true,
@@ -71,7 +70,7 @@
     ]
   },
   "keywords": [
-    "ddv-server-mustache-1-0",
+    "ddv-server-mustache",
     "ddv",
     "ddvservser",
     "server"
@@ -84,12 +83,12 @@
       "email": "yuchonghua@163.com"
     }
   ],
-  "name": "ddv-server-mustache-1-0",
+  "name": "ddv-server-mustache",
   "optionalDependencies": {},
   "preferGlobal": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ddvs/ddv-server-mustache-1-0.git"
+    "url": "git+https://github.com/ddvs/ddv-server-mustache.git"
   },
   "scripts": {
     "dev": "node ./build/webpack.run.js dev",
@@ -102,5 +101,5 @@
     "prepublish": "npm run dist",
     "test": "npm run lint"
   },
-  "version": "0.0.16"
+  "version": "0.0.1"
 }
