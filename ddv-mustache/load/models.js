@@ -148,7 +148,6 @@ loadModels.__Ajax = function (options, success, error) {
   let [c, req, res] = this._API.__M.processApp
   // 设置默认请求域名
   api.setBaseUrl(req.appConfig.urlapi.model)
-  console.log('req.appConfig.model',req.appConfig.urlapi.model)
 
   // api.setBaseUrl('http://api.unicomvideo.ping-qu.com/')
   // api.setBaseUrl('http://api.salevideo.ping-qu.com/')
@@ -162,7 +161,7 @@ loadModels.__Ajax = function (options, success, error) {
   api.setSessionInitPath(req.appConfig.urlapi.session_init || '/session/init')
 
   api(options.path || '/', req, res).method(options.type || 'GET').headers(options.headers || {}).sendData(options.data || {})
-  .then(res => console.log('ss',res)||success(res))
+  .then(res => success(res))
   .catch(e => error(e.message, e))
 }
   // 主要是深度克隆，防止对象被引用，导致数据污染
