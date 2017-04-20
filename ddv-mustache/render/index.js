@@ -76,7 +76,6 @@ function renderInit () {
   this.render.use(renderWaitMiddleware.bind(this))
   // 根目录下的static优先
   this.render.use(serve.call(this, path.join(this.dir, '/static'), true))
-  this.render.use('/ddvstatic', this.renderDdvstaticMiddleware)
 
   // 使用渲染模块
   this.render.use(renderProject.bind(this))

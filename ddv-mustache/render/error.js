@@ -12,7 +12,6 @@ function renderBaseError (req, res, err) {
     NotFindFileError.path = req.path
     is404 = true
   }
-  console.log(req.project)
   logger.error(err)
   var html = '<pre>' + err.stack + '</pre>'
   res.statusCode = is404 ? 404 : 500

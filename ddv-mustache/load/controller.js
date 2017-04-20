@@ -53,8 +53,10 @@ function loadControllerFile (file, appPath, corePath) {
     return {c}
   })
   .then(({c, extendc}) => {
-    var controller = Object.create(null)
+    var controllerp = Object.create(null)
+    var controller = Object.create(controllerp)
     var controllers = [extendc, c]
+    controllerp._ddvSysHotLoadPaths = [file].concat(extendc ? extendc._ddvSysHotLoadPaths : [])
     controllers.forEach(ct => {
       var keys
       if (!ct) {

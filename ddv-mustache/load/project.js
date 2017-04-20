@@ -4,6 +4,7 @@ const fs = require('fs')
 // 路径模块
 const path = require('path')
 
+const NotFindFileError = require('../NotFindFileError.js')
 const ddvStaticPath = '/ddvstatic/'
 const ddvStaticPathLen = ddvStaticPath.length
 const hotLoadPath = '/ddvstatic/js/sys/hotLoad'
@@ -11,7 +12,7 @@ const hotLoadPathLen = hotLoadPath.length
 
 function joinConfigDir ({pathArray, pathI = 0, appDir}) {
   if (!(pathArray && pathArray.length > 0 && pathI < pathArray.length)) {
-    return Promise.reject(new Error('not find project'))
+    return Promise.reject(new NotFindFileError('file not found by project not found'))
   }
   var project = Object.create(null)
   project.pathI = pathI
@@ -32,9 +33,14 @@ function joinConfigDir ({pathArray, pathI = 0, appDir}) {
   })
 }
 module.exports = function getProject (appDir, router) {
+  var i
   var pathArray = []
   // 以 / 来拆分 path 为一个数组
   pathArray = router.path.length > 0 ? (router.path || '/').split('/') : []
+  for (i = 0; i < pathArray.length; i++) {
+    // 去除空数据
+    pathArray[i] || pathArray.splice(i--, 1)
+  }
 
   return joinConfigDir({pathArray, appDir})
   .then(({base, routerFile, pathI}) => {
@@ -69,6 +75,7 @@ module.exports = function getProject (appDir, router) {
       project.pathinfo[dirName] = path.resolve(base, dirName)
     })
     project.pathinfo.url = base + '/'
+    project.pathinfo.base = project.base
     project.router = router
     return project
   })

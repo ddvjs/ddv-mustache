@@ -231,7 +231,6 @@ function runController (req, res, c) {
     })
   })
   .then(() => {
-    console.log('c', c)
     // 序列化dom
     req.window.documentHtml = jsdom.serializeDocument(req.window.document)
     // 返回渲染结果
