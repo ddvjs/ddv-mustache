@@ -19,11 +19,13 @@
   },
   "description": "ddv-mustache is a mustache and requirejs based on the development of ddv expansion module, using the server + browser rendering mode to support ie low version browser",
   "devDependencies": {
-    "ddv-mustache-webpack-dev":"~0.0.1"
+    "ddv-mustache-webpack-dev":"~0.0.2"
   },
   "directories": {},
   "homepage": "https://github.com/ddvs/ddv-mustache#readme",
-  "jshintConfig": {},
+  "jshintConfig": {
+    "disable": true
+  },
   "keywords": [
     "ddv-mustache",
     "ddv",
@@ -46,14 +48,11 @@
     "url": "git+https://github.com/ddvs/ddv-mustache.git"
   },
   "scripts": {
-    "dev": "node ./build/webpack.run.js dev",
-    "build": "node ./build/webpack.run.js build",
-    "dist": "npm run lint && npm run clear && npm run build",
-    "clear:build": "rm -rf ./lib",
-    "clear": "npm run clear:build",
-    "lint": "eslint packages src server bin build",
-    "precommit": "npm run dist",
-    "prepublish": "npm run dist",
+    "lint:eslint": "eslint packages src server bin build",
+    "lint:ishasdev": "ddv-mustache ishasdev",
+    "lint": "lint:ishasdev && lint:eslint",
+    "precommit": "npm run lint",
+    "prepublish": "npm run lint",
     "test": "npm run lint"
   },
   "version": "0.0.1"
