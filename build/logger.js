@@ -8,7 +8,7 @@ const version = require('../package.json').version
 /**
  * Prefix.
  */
-const prefix = `[ddv-cms@${version}]`
+const prefix = `[mustache@${version}]`
 const sep = chalk.gray('-')
 
 /**

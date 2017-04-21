@@ -3,6 +3,7 @@ const logger = require('../../build/logger')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const webpackConfigBase = require('./webpack.base.js')
 const getEntryAndCopyPath = require('./getEntryAndCopyPath.js')
+const ddvMustacheWebpackDev = require('../../ddv-mustache-webpack-dev')
 const webpack = require('webpack')
 const path = require('path')
 const loggerConfig = {
@@ -18,18 +19,23 @@ copyWebpackPath.push({ from: path.resolve(__dirname, '../ddvstatic'), to: '../dd
 
 module.exports = function buildExports () {
   this.isBuildIng = true
-  return new Promise((resolve, reject) => {
-    this.dev && resolve()
-    build.call(this).then(() => {
-      this.dev || resolve.apply(this, arguments)
-      // 标记结束
-      this.isBuildIng = false
-      this.renderQueueRun()
-    }, (e) => {
-      logger.fatal(e)
-      this.dev || reject.apply(this, arguments)
-      this.isBuildIng = false
-      this.renderQueueRun()
+  // 判断是否有dev
+  return ddvMustacheWebpackDev()
+  .then(() => {
+    // 等待编译结果
+    return new Promise((resolve, reject) => {
+      this.dev && resolve()
+      build.call(this).then(() => {
+        this.dev || resolve.apply(this, arguments)
+        // 标记结束
+        this.isBuildIng = false
+        this.renderQueueRun()
+      }, (e) => {
+        logger.fatal(e)
+        this.dev || reject.apply(this, arguments)
+        this.isBuildIng = false
+        this.renderQueueRun()
+      })
     })
   })
 }

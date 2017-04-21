@@ -5,6 +5,7 @@ const app = require('express')()
 const worker = require('ddv-worker')
 const http = require('http')
 const DdvMustache = require('../ddv-mustache')
+const logger = require('../build/logger.js')
 var config = null
 var ddvMustache = null
 var siteConfigFile = null
@@ -33,9 +34,9 @@ function createDdvRender () {
       return ddvMustache.build()
     }
   }).then(() => {
-    console.log('create ddvMustache render success')
+    logger.log('create ddvMustache render success')
   }).catch((error) => {
-    console.error(error) // eslint-disable-line no-console
+    logger.error(error)
     process.exit(1)
   })
 }
@@ -45,7 +46,7 @@ worker.serverStart = function serverStart (siteConfigFileInput, configInput) {
   config = configInput
   chokidar.watch(siteConfigFile, { ignoreInitial: true })
   .on('all', function () {
-    console.log('You have modified the configuration information and are recompiling')
+    logger.log('You have modified the configuration information and are recompiling')
     // 重新创建编译器
     createDdvRender()
   })
@@ -53,7 +54,7 @@ worker.serverStart = function serverStart (siteConfigFileInput, configInput) {
   createDdvRender().then(() => {
     if (config.dev) {
       // 使用ddvMustache插件
-      app.use(function (res, req, next) {
+      app.use(function (req, res, next) {
         return ddvMustache.render.apply(this, arguments)
       })
     } else {
@@ -65,11 +66,12 @@ worker.serverStart = function serverStart (siteConfigFileInput, configInput) {
       defaultListen: config.defaultListen,
       listen: config.listen,
       cpuLen: config.cpuLen
-    }).then(() => {
-      console.log('监听配置参数 更新成功')
+    }).then(res => {
+      logger.log('listen updated success')
+      logger.log(res)
     }, e => {
-      console.error('监听配置参数 更新失败')
-      console.error(e)
+      logger.log('listen updated fail')
+      logger.error(e)
     })
   })
 }
