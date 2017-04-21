@@ -1,6 +1,8 @@
 {
   "bin": {
-    "ddv-mustache": "./bin/ddv-mustache"
+    "ddv_mustache": "./bin/ddv-mustache",
+    "ddv-mustache": "./bin/ddv-mustache",
+    "ddv-server-mustache": "./bin/ddv-mustache"
   },
   "bugs": {
     "url": "https://github.com/ddvs/ddv-mustache/issues"
@@ -21,18 +23,7 @@
   },
   "directories": {},
   "homepage": "https://github.com/ddvs/ddv-mustache#readme",
-  "jshintConfig": {
-    "esversion": 6,
-    "undef": true,
-    "unused": true,
-    "node": true,
-    "predef": [
-      "module",
-      "require",
-      "console",
-      "process"
-    ]
-  },
+  "jshintConfig": {},
   "keywords": [
     "ddv-mustache",
     "ddv",
@@ -40,7 +31,7 @@
     "server"
   ],
   "license": "MIT",
-  "main": "lib2/run.js",
+  "main": "ddv-mustache/index.js",
   "maintainers": [
     {
       "name": "yuchonghua",
