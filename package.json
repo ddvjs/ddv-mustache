@@ -1,62 +1,26 @@
 {
   "bin": {
-    "ddv-server-mustache": "./bin/ddv-server-mustache"
+    "ddv-mustache": "./bin/ddv-mustache"
   },
   "bugs": {
-    "url": "https://github.com/ddvs/ddv-server-mustache/issues"
+    "url": "https://github.com/ddvs/ddv-mustache/issues"
   },
   "dependencies": {
+    "cross-spawn": "~5.1.0",
     "cjb-base": ">=0.0.35",
-    "colors": "~1.1.2",
-    "crypto-js": ">=3.1.8",
     "ddv-worker": ">=0.0.18",
     "etag": ">=1.7.0",
     "express": "~4.14.0",
     "jsdom": ">=9.9.1",
-    "mime": ">=1.3.4",
     "requirejs": ">=2.3.2",
     "lodash": "^4.17.4"
   },
-  "description": "ddv-server-mustache is a mustache and requirejs based on the development of ddv expansion module, using the server + browser rendering mode to support ie low version browser",
+  "description": "ddv-mustache is a mustache and requirejs based on the development of ddv expansion module, using the server + browser rendering mode to support ie low version browser",
   "devDependencies": {
-    "babel-eslint": "^7.2.1",
-    "buble-loader": "^0.4.1",
-    "copy-webpack-plugin": "^4.0.1",
-    "eslint": "^3.19.0",
-    "eslint-config-standard": "^10.2.0",
-    "eslint-loader": "^1.7.1",
-    "eslint-plugin-html": "^2.0.1",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^4.2.2",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "css-loader": "^0.24.0",
-    "file-loader": "^0.9.0",
-    "html-loader": "^0.4.5",
-    "json-loader": "^0.5.4",
-    "sass-loader": "^6.0.3",
-    "scss-loader": "0.0.1",
-    "style-loader": "^0.13.2",
-    "url-loader": "^0.5.8",
-    "css-entry-webpack-plugin": "^1.0.0-beta.4",
-    "node-sass": "^4.5.2",
-    "postcss-bem": "^0.4.1",
-    "postcss-cssnext": "^2.10.0",
-    "postcss-loader": "^1.3.3",
-    "progress-bar-webpack-plugin": "^1.9.3",
-    "webpack": "^2.3.3",
-    "webpack-dev-server": "^2.4.2",
-    "babel-core": "^6.24.1",
-    "babel-loader": "^6.4.1",
-    "babel-plugin-array-includes": "^2.0.3",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "webpack-node-externals": "^1.5.4"
+    "ddv-mustache-webpack-dev":"~0.0.1"
   },
   "directories": {},
-  "homepage": "https://github.com/ddvs/ddv-server-mustache#readme",
+  "homepage": "https://github.com/ddvs/ddv-mustache#readme",
   "jshintConfig": {
     "esversion": 6,
     "undef": true,
@@ -70,7 +34,7 @@
     ]
   },
   "keywords": [
-    "ddv-server-mustache",
+    "ddv-mustache",
     "ddv",
     "ddvservser",
     "server"
@@ -83,12 +47,12 @@
       "email": "yuchonghua@163.com"
     }
   ],
-  "name": "ddv-server-mustache",
+  "name": "ddv-mustache",
   "optionalDependencies": {},
   "preferGlobal": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ddvs/ddv-server-mustache.git"
+    "url": "git+https://github.com/ddvs/ddv-mustache.git"
   },
   "scripts": {
     "dev": "node ./build/webpack.run.js dev",
