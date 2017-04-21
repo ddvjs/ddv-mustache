@@ -1,11 +1,8 @@
 'use strict'
-const logger = require('../../build/logger')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const webpackConfigBase = require('./webpack.base.js')
-const getEntryAndCopyPath = require('./getEntryAndCopyPath.js')
-const ddvMustacheWebpackDev = require('../../ddv-mustache-webpack-dev')
-const webpack = require('webpack')
 const path = require('path')
+const logger = require('../../build/logger')
+const ddvMustacheWebpackDev = require('../../ddv-mustache-webpack-dev')
+var CopyWebpackPlugin, webpackConfigBase, getEntryAndCopyPath, webpack
 const loggerConfig = {
   colors: true,
   progress: true,
@@ -22,6 +19,12 @@ module.exports = function buildExports () {
   // 判断是否有dev
   return ddvMustacheWebpackDev()
   .then(() => {
+    if (!webpack) {
+      CopyWebpackPlugin = require('copy-webpack-plugin')
+      webpackConfigBase = require('./webpack.base.js')
+      getEntryAndCopyPath = require('./getEntryAndCopyPath.js')
+      webpack = require('webpack')
+    }
     // 等待编译结果
     return new Promise((resolve, reject) => {
       this.dev && resolve()
