@@ -38,7 +38,7 @@ function getEntry (self, isReload = false) {
 }
 function getEntryByGlob (self, cache) {
   return Promise.all([
-    buildUtil.getPathByGlob('/*/styles/**/*.*', {
+    buildUtil.getPathByGlob('/*/styles/**/*.?(css|scss|sass|less|stylus|styl)', {
       root: self.appDir
     })
   ])

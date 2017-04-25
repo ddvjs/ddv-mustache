@@ -1,4 +1,5 @@
 'use strict'
+const path = require('path')
 const glob = require('glob')
 module.exports = {
   getPathByGlob,
@@ -13,6 +14,7 @@ function getPathByGlob (pattern, options) {
     var paths = []
     var appDirCheck = options.root + '/'
     var appDirLen = appDirCheck.length || 0
+    appDirCheck = appDirCheck.replace(/\//g, path.sep)
     files.forEach(file => {
       if (file.substr(0, appDirLen) === appDirCheck) {
         paths.push(file.substr(appDirLen))
