@@ -72,7 +72,7 @@ module.exports = function getProject (appDir, router) {
     project.pathinfo = Object.create(null)
     // 遍历拼接路径
     'cache config controllers core images libraries logs models styles views'.split(' ').forEach(dirName => {
-      project.pathinfo[dirName] = path.resolve(base, dirName)
+      project.pathinfo[dirName] = path.join(base, dirName)
     })
     project.pathinfo.url = base + '/'
     project.pathinfo.base = project.base

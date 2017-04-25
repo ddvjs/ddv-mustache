@@ -16,7 +16,7 @@ function getPathByGlob (pattern, options) {
     var appDirLen = appDirCheck.length || 0
     appDirCheck = appDirCheck.replace(/\//g, path.sep)
     files.forEach(file => {
-      if (file.substr(0, appDirLen) === appDirCheck) {
+      if (file.substr(0, appDirLen).replace(/\//g, path.sep) === appDirCheck) {
         paths.push(file.substr(appDirLen))
       }
     })

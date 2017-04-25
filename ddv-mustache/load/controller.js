@@ -85,7 +85,7 @@ function loadControllerFile (file, appPath, corePath) {
           case 'browser':
           case 'node':
             controller[key] = Array.isArray(controller[key]) ? controller[key] : []
-            controller[key].push(value)
+            Array.isArray(value) ? controller[key].push.apply(controller[key], value) : controller[key].push(value)
             break
           // 其他使用撮合
           default:

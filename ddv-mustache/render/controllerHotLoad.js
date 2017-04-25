@@ -72,7 +72,7 @@ function runControllerHotLoad (project, req, res, next) {
       let context = fs.readFileSync(p, {encoding: 'utf8'})
       let key = p.substr(appDirLen)
       key = (key[0] === '/' ? '' : '/') + key
-      res.write('loadLists[' + JSON.stringify(key) + ']=' + JSON.stringify(context.toString()) + ';' + br)
+      res.write('loadLists[' + JSON.stringify(key.replace(/\\/g, '/')) + ']=' + JSON.stringify(context.toString()) + ';' + br)
     })
 
     let context = fs.readFileSync(path.join(this.appDir, './router.js'), {encoding: 'utf8'})
@@ -95,7 +95,7 @@ function runControllerHotLoad (project, req, res, next) {
   })
   .then(() => {
     // 设定 所有模块的查找根路径
-    config.baseUrl = project.pathinfo.base
+    config.baseUrl = project.pathinfo.base.replace(/\\/g, '/')
     // 设定 插件映射[path映射那些不直接放置于baseUrl下的模块名][用于模块名的path不应含有.js后缀]
     config.paths = Object.create(null)
     // 设定 为那些没有使用define()来声明依赖关系、设置模块的"浏览器全局变量注入"型脚本做依赖和导出配置。
@@ -169,6 +169,9 @@ function runControllerHotLoad (project, req, res, next) {
   })
   .then(() => {
     config.pathinfo = {dir: project.pathinfo}
+    b.each(config.pathinfo.dir,function(key, v){
+      config.pathinfo.dir[key] = v.replace(/\\/g, '/')
+    })
     config.appConfig = req.appConfig || b.inherit(null)
     res.write('loadLists["config"] = c = ' + renderControllerHotLoad.toJSON(config) + ';' + br)
   })
@@ -177,7 +180,7 @@ function runControllerHotLoad (project, req, res, next) {
       let i = 0
       let load = (name, path, isDdvstatic) => {
         if (isDdvstatic) {
-          if (['/js/sys/cjb-base.js', '/js/sys/cjb-base.js.map', '/js/sys/cjb-base.source.js'].indexOf(path) > -1) {
+          if (['/js/sys/cjb-base.js', '/js/sys/cjb-base.js.map', '/js/sys/cjb-base.source.js'].indexOf(path.replace(/\\/g, '/')) > -1) {
             try {
               let t = require.resolve('cjb-base/lib' + path.substr('/js/sys'.length))
               path = t
