@@ -54,7 +54,7 @@ module.exports = {
         loader: 'url-loader',
         query: {
           limit: 10000,
-          name: 'static/[name].[hash:7].[ext]'
+          name: '/static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -62,7 +62,7 @@ module.exports = {
         loader: 'url-loader',
         query: {
           limit: 10000,
-          name: 'static/[name].[hash:7].[ext]'
+          name: '/static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -70,7 +70,7 @@ module.exports = {
         loader: 'url-loader',
         query: {
           limit: 10000,
-          name: 'static/[name].[hash:7].[ext]'
+          name: '/static/[name].[hash:7].[ext]'
         }
       },
       {
