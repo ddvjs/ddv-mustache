@@ -15,6 +15,7 @@ const copyWebpackPath = []
 copyWebpackPath.push({ from: path.resolve(__dirname, '../ddvstatic'), to: '../ddvstatic' })
 
 module.exports = function buildExports () {
+  copyWebpackPath.push({ from: path.resolve(this.buildDistDir, '../apiRESTful/index.js'), to: '../ddvstatic/js/hz/apiRESTful.js' })
   this.isBuildIng = true
   // 判断是否有dev
   return ddvMustacheWebpackDev()

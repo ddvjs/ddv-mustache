@@ -3,8 +3,10 @@
 const CssEntryPlugin = require('css-entry-webpack-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const webpack = require('webpack')
+const path = require('path')
 module.exports = {
   entry: {
+    '../apiRESTful': path.resolve(__dirname, '../apiRESTful.js')
   },
   output: {
     filename: '[name]/index.js',

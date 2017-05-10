@@ -1,3 +1,4 @@
+/* global define, APP */
 define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, base) {
 // APP 超全局对象
 // App 加载app的对象
@@ -90,9 +91,9 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
           q.abort(); return// 放弃加载
         }
         // 加载文件
-        var load_file = this.sys.file.controllers
+        var loadFile = this.sys.file.controllers
         // 加载控制器
-        appRun.loadControllers(load_file, function success (controllers) {
+        appRun.loadControllers(loadFile, function success (controllers) {
           // 创建一个空的纯粹的对象
           _this.sys.controllers = controllers
           // 复制
@@ -108,7 +109,6 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
           // 中断队列
           // q.abort();
         })
-        load_file = undefined
       })
       // 加载视图模块
       q.push(true, function loadViews (next) {
@@ -136,7 +136,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
       // 加载数据模型模块
       q.push(true, function loadModels (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         if (!this.sys.controllers.model) {
@@ -160,7 +160,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
       // 创建加载容器
       q.push(true, function createWrapRun (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         createWrap.call(this)
@@ -174,7 +174,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
       // 初始化appBase
       q.push(true, function appBase (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         appRun.appBase.call(this)
@@ -250,12 +250,11 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
       // browser中 browserBaseRun的事件触发
       q.push(true, function browseSysBaseRun (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         if (App.is_one_sys_base_run === true) {
           next()
-          return
         } else {
           App.is_one_sys_base_run = true
           // 等待触发处理结束
@@ -270,7 +269,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
       // browser中 browserBaseRun的事件触发
       q.push(true, function browserBaseRun (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         // 等待触发处理结束
@@ -287,7 +286,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       // 触发创建事件
       q.push(true, function loadLinksRun (next) {
         var wrap_i, temp_wrap, loadLinks, callback
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         if (!this.sys.views) {
@@ -345,14 +344,13 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
       // 触发创建事件
       q.push(true, function triggerCreate (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         // 重置popstate
         App.setPopState(this.state, true)
         if (this.sys.is_create === true) {
           next()
-          return
         } else {
           // 防止多次触发创建
           this.sys.is_create = true
@@ -523,7 +521,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       }
       if (cfile.substr(0, this.sys.dir.base.length) === this.sys.dir.base) {
         cfile = cfile.substr(this.sys.dir.base.length)
-        if (cfile.substr(0, 1) == '/') {
+        if (cfile.substr(0, 1) === '/') {
           cfile = cfile.substr(1)
         }
       } else {
@@ -563,34 +561,34 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
         key = undefined
       }, true, this)
     }
-  // 基本信息初始化
+    // 基本信息初始化
     appRun.infoInit = function () {
       this.is = this.is || APP.inherit(null)
-    // 是否在node运行
+      // 是否在node运行
       this.is.node_run = false
-    // 是否为新创建的窗口
+      // 是否为新创建的窗口
       this.is.new_create = false
-    // 系统内部
+      // 系统内部
       this.sys = APP.inherit(null)
-    // 继承集合
+      // 继承集合
       this.sys.protos = APP.inherit(null)
-    // 控制器模块
+      // 控制器模块
       this.sys.controllers = APP.inherit(null)
-    // models集合
+      // models集合
       this.sys.models = APP.inherit(null)
-    // 创建
+      // 创建
       this.sys.is_create = false
     }
 
     appRun.remove = function () {
-    // 移除
+      // 移除
       $(this.bodywrap).remove()
       delete App.process[this.pid]
     }
   }
-// app基础文件
+  // app基础文件
   init.routerInit = function () {
-  // 构造对象
+    // 构造对象
     router = {}
     router.map = {}
     router.regExp = function (url, callback) {
@@ -599,7 +597,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
     }
     router.regExpInitLock = false
-  // 初始化
+    // 初始化
     router.regExpInit = function (callback) {
       if (router.regExpInitLock) {
         callback()
@@ -608,172 +606,172 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       router.regExpInitLock = true
       router.regExpLoad.call(this, callback)
     }
-  // 加载
+    // 加载
     router.regExpLoad = function (callback) {
-      var i, check, r, default_fn
+      var i, check, defaultFn
       i = 0
       router.map = {}
       router.map.app = {}
       router.map.root = {}
 
-      default_fn = function (path) {
+      defaultFn = function (path) {
         return path
       }
       check = function () {
-        if (++i == 2) {
+        if (++i === 2) {
           callback()
           i = check = callback = undefined
         }
       }
       APP.__rLoad.require(['app.router'], function (map) {
-        var rule, router_map, default_func
+        var rule, routerMap, defaultFunc
         map = map || {}
-        router_map = []
+        routerMap = []
 
         map['404'] = map['404'] || map['*']
         map['*'] = map['*'] || map['404']
         for (rule in map) {
           if (!map.hasOwnProperty(rule)) continue
           if (rule === '*' || rule === '404') {
-            default_func = map[rule] || default_fn
+            defaultFunc = map[rule] || defaultFn
             continue
           }
-          router_map.push({
+          routerMap.push({
             rule: new RegExp(rule, 'i'),
             func: map[rule]
           })
         }
         router.map.app = {
-          map: router_map,
-          default_func: default_func || default_fn
+          map: routerMap,
+          defaultFunc: defaultFunc || defaultFn
         }
-        rule = router_map = default_func = undefined
+        rule = routerMap = defaultFunc = undefined
 
-        r = check && check() && undefined
+        check && check()
       }, function (e) {
         router.map.app = {
           map: [],
-          default_func: default_fn
+          defaultFunc: defaultFn
         }
-        r = check && check() && undefined
+        check && check()
       })
       APP.__rLoad.require(['/router.js'], function (map) {
-        var rule, router_map, default_func
+        var rule, routerMap, defaultFunc
         map = map || {}
-        router_map = []
+        routerMap = []
 
         map['404'] = map['404'] || map['*']
         map['*'] = map['*'] || map['404']
         for (rule in map) {
           if (!map.hasOwnProperty(rule)) continue
           if (rule === '*' || rule === '404') {
-            default_func = map[rule] || default_func || default_fn
+            defaultFunc = map[rule] || defaultFunc || defaultFn
             continue
           }
-          router_map.push({
+          routerMap.push({
             rule: new RegExp(rule, 'i'),
             func: map[rule]
           })
         }
         router.map.root = {
-          map: router_map,
-          default_func: default_func || default_fn
+          map: routerMap,
+          defaultFunc: defaultFunc || defaultFn
         }
-        rule = router_map = default_func = undefined
+        rule = routerMap = defaultFunc = undefined
 
-        r = check && check() && undefined
+        check && check()
       }, function (e) {
         router.map.root = {
           map: [],
-          default_func: default_fn
+          defaultFunc: defaultFn
         }
-        r = check && check() && undefined
+        check && check()
       })
     }
-  // 开始运行
+    // 开始运行
     router.regExpRun = function (url, callback) {
       APP.each([router.map.root, router.map.app], function (index, routes) {
-        var route, route_index, match_result
-        for (route_index in routes.map) {
-          route = routes.map[route_index]
-          match_result = url.match(route.rule)
-          if (match_result) {
-            url = route.func.apply(routes, match_result.slice(1))
+        var route, routeIndex, matchResult
+        for (routeIndex in routes.map) {
+          route = routes.map[routeIndex]
+          matchResult = url.match(route.rule)
+          if (matchResult) {
+            url = route.func.apply(routes, matchResult.slice(1))
             break
           }
         }
-        url = routes.default_func(url)
-        route = route_index = match_result = undefined
+        url = routes.defaultFunc(url)
+        route = routeIndex = matchResult = undefined
       })
       if (callback && (typeof callback === 'function')) {
         callback(url)
       }
     }
   }
-// app基础文件
+  // app基础文件
   init.appBaseInit = function () {
     appRun.appBase = function () {
       this.appBase = function appBase () {}
-    // 创建的model对象，继承被appNode
+      // 创建的model对象，继承被appNode
       this.appBase.prototype = {}
-    // 实例化appNode对象
+      // 实例化appNode对象
       this.appBase = new this.appBase()
-    // 指定views
+      // 指定views
       this.appBase.view = this.sys.views
-    // 构建models
+      // 构建models
       this.appBase.model = function Models () {}
     //
       this.appBase.model.prototype = APP.inherit(null)
-    // 实例化appNode对象
+      // 实例化appNode对象
       this.appBase.model = new this.appBase.model()
-    // 注入models
+      // 注入models
       APP.each(this.sys.models, function (key, model) {
         this.appBase.model[key] = function Model () {}
-      // 创建的model对象，继承被实例化的app
+        // 创建的model对象，继承被实例化的app
         this.appBase.model[key].prototype = APP.inherit(model)
-      // 对象实例化model
+        // 对象实例化model
         this.appBase.model[key] = new this.appBase.model[key]()
       }, true, this)
     }
   }
-// 加载app初始化
+  // 加载app初始化
   init.loadAppInit = function () {
     App.add_time_last = 0
-  // 根据state加载
-    App.loadAppByState = function (state, is_reload) {
+    // 根据state加载
+    App.loadAppByState = function (state, isReload) {
       var pid, _this, run
       run = function () {}
       state.pathquery = App.urlToPathquery(state.pathquery || state.url)
       if (state.pathquery === App.pathqueryold) {
-      // alert('你要的地址:'+state.pathquery);
+        // alert('你要的地址:'+state.pathquery);
         return
       }
       App.pathqueryold = state.pathquery
       pid = $(APP.__rLoad.appConfig.window_select + '[pid][pathquery=' + APP.toJSON(state.pathquery) + ']', App.wrap).attr('pid') || 0
-      if (is_reload !== true) {
+      if (isReload !== true) {
         _this = App.process[pid] || undefined
       }
 
       if (_this && _this.pid) {
-        if (App.last_pathquery != state.pathquery) {
+        if (App.last_pathquery !== state.pathquery) {
           run = function () {
             App.tabToWindow(state.pathquery, pid)
           }
         }
       } else {
-      // 指定继承app基类
+        // 指定继承app基类
         processApp.prototype = loadApp
-      // 实例化
+        // 实例化
         _this = new processApp()
-      // 状态
+        // 状态
         _this.state = state
-      // url
+        // url
         _this.url = state.url
-      // 添加时间
+        // 添加时间
         _this.add_time = APP.time()
-      // 进程id
+        // 进程id
         _this.pid = App.getPid().toString()
-      // 相对根路径
+        // 相对根路径
         _this.pathquery = state.pathquery
 
         run = function () {
@@ -782,154 +780,42 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
         App.process[_this.pid] = _this
       }
       _this.state = _this.state || state
-    // 赋值pid
+      // 赋值pid
       _this.state.pid = _this.pid
-    // 赋值添加时间
+      // 赋值添加时间
       App.add_time_last = _this.state.add_time = _this.add_time
-    // 赋值更新时间
+      // 赋值更新时间
       _this.state.up_time = _this.up_time = APP.time()
-    // 最后修改路径
+      // 最后修改路径
       App.last_pathquery = _this.state.pathquery
-    // 重置popstate
+      // 重置popstate
       App.setPopState(_this.state, true)
-    // 垃圾回收
-      is_reload = undefined
+      // 垃圾回收
+      isReload = undefined
       run()
       _this.state = undefined
       run = undefined
-    // 返回实例化的加载对象
+      // 返回实例化的加载对象
       return _this
     }
   }
-// apiRESTful请求初始化
+  // apiRESTful请求初始化
   init.apiRESTfulInit = function () {
-    var load_lists = []
-    load_lists.push('apiRESTful')
-    if (!APP.is.ie678) {
-      load_lists.push('CryptoJS', 'CryptoJSHmac', 'CryptoJSMD5', 'CryptoJSSHA256', 'CryptoJSEncBase64')
-    }
-    APP.__rLoad.require(load_lists, function (ApiRESTful, CryptoJS) {
-      APP.ApiRESTful = ApiRESTful
-      // base库
-      APP.ApiRESTful.setBase(base)
-      // HmacSHA256加密算法
-      APP.ApiRESTful.setHmacSHA256(function (data, key) {
-        return APP.CryptoJS.HmacSHA256(data, key).toString(APP.CryptoJS.enc.Hex)
-      })
-      // md5Base64加密算法
-      APP.ApiRESTful.setMd5Base64(function md5Base64 (data) {
-        return APP.CryptoJS.MD5(data).toString(APP.CryptoJS.enc.Base64)
-      })
-      // md5加密算法
-      APP.ApiRESTful.setMd5Hex(function md5Hex (data) {
-        return APP.CryptoJS.MD5(data).toString(APP.CryptoJS.enc.Hex)
-      })
-      if (!APP.is.ie678) {
-        APP.CryptoJS = CryptoJS
-      }
-      init.apiRESTfulInitRun()
+    APP.__rLoad.require(['apiRESTful'], function (ddvApiRESTful) {
+      var config = APP.__rLoad.appConfig
+      // 设置默认请求域名
+      ddvApiRESTful.setBaseUrl(config.urlapi.model)
+
+      // 自定义头前缀
+      ddvApiRESTful.setHeadersPrefix(config.headers_prefix)
+      // 是否长期会话
+      ddvApiRESTful.setLongStorage(config.long_storage)
+      // 设置会话初始化最大自动尝试次数，默认3次
+      ddvApiRESTful.setSessionInitTrySum(3)
+      // 设置初始化session的path，默认/session/init
+      ddvApiRESTful.setSessionInitPath(config.urlapi.session_init || '/session/init')
+      APP.ddvApiRESTful = ddvApiRESTful
     })
-  }
-  init.apiRESTfulInitRun = function () {
-    var apiRESTful, c
-
-    c = {}
-    c.url = APP.__rLoad.appConfig.urlapi
-    // 头前缀
-    c.headers_prefix = APP.__rLoad.appConfig.headers_prefix
-    // 项目目录
-    // c.filetype = 'file';
-    // 是否长期保持会话
-    c.long_storage = APP.__rLoad.appConfig.long_storage || false
-    // 是否自动切换长连接模式
-    c.auto_to_ws = APP.__rLoad.appConfig.auto_to_ws === undefined ? true : APP.__rLoad.appConfig.auto_to_ws
-    // 配置信息目录
-    c.config_dir = APP.__pathinfo.dir.config
-
-    c.ajax = function (o) {
-      var options = {}
-      options.type = o.type || 'GET'
-      options.headers = o.headers
-      options.url = o.url
-      options.data = o.data
-      options.dataType = 'text'
-      options.success = function (html) {
-        o.success(html)
-      }
-      options.error = function (XHR, ts, errorThrown) {
-        var text, data
-        text = XHR.responseText || ''
-        try {
-          data = APP.parseJSON(text)
-        } catch (e) {
-          data = {}
-        }
-        data.responseText = text
-        data.status = XHR.status
-        data.statusText = XHR.statusText
-        o.error(errorThrown, data)
-      }
-      $.ajax(options)
-    }
-    // 默认获取session数据
-    c.getSessionData = function (hostname, callback) {
-      hostname = c.getSessionHostnameen(hostname)
-      var data = APP.cookie.get(hostname) || null
-      // 本地存储模块
-      if (!data) {
-        try {
-          if (c.long_storage) {
-            // 长期存储模式
-            data = localStorage.getItem(hostname) || null
-            APP.cookie.set(hostname, data)
-          } else {
-            // 会话形式
-            data = sessionStorage.getItem(hostname) || null
-            APP.cookie.set(hostname, data, APP.cookie.getExpiresDate('365', '12', '60'))
-          }
-        } catch (e) {
-          data = null
-        }
-      }
-      callback(data)
-    }
-    // 默认保存session数据方法
-    c.setSessionData = function (hostname, data, callback) {
-      hostname = c.getSessionHostnameen(hostname)
-      // 本地存储模块
-      try {
-        if (c.long_storage) {
-          // 长期存储模式
-          localStorage.setItem(hostname, data)
-        } else {
-          // 会话形式
-          sessionStorage.setItem(hostname, data)
-        }
-      } catch (e) {}
-      APP.cookie.remove(hostname)
-      // 写直接写入为session时间
-      APP.cookie.set(hostname, data)
-      if (c.long_storage) {
-        APP.cookie.remove(hostname)
-        // 如果需要长期就加长时间
-        APP.cookie.set(hostname, data, APP.cookie.getExpiresDate('365', '12', '60'))
-      }
-      callback(null)
-    }
-    c.getSessionHostnameen = function (hostname) {
-      hostname = APP.CryptoJS.enc.Utf8.parse((hostname || 'sid').toString() || '').toString(APP.CryptoJS.enc.Base64)
-      hostname = hostname.replace(/_/g, '____').replace(/\+/g, '___').replace(/\//g, '__').replace(/=/g, '_')
-      return hostname
-    }
-    try {
-      if (c.url.model) {
-        APP.apiRESTful = apiRESTful = new APP.ApiRESTful(c)
-      } else {
-        APP.App.error('api接口地址配置错误', e)
-      }
-    } catch (e) {
-      APP.App.error('api接口地址配置错误', e)
-    }
   }
 // 拦截所有a链接的请求
   init.popStateInit = function () {
@@ -960,9 +846,9 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
    * @return   {[type]}                   [description]
    */
     App.AClickRun = function (e) {
-      var $this, url, is_self, thisdom, pathquery, pathbase, state
+      var $this, url, isSelf, thisdom, pathquery, pathbase, state
       // 是自己[是否为本项目]
-      is_self = true
+      isSelf = true
       // 拿到被点击的a标签的jqdom
       $this = $(this)
       // 拿到原始dom
@@ -971,29 +857,29 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       url = $this.attr('href') || null
       // 拿不到点击后的跳转路径就直接否定
       if (!url) {
-        is_self = false
+        isSelf = false
       }
       // 如果跳转的主机头和当前不一致就否定
-      if (thisdom.hostname != window.location.hostname) {
-        is_self = false
+      if (thisdom.hostname !== window.location.hostname) {
+        isSelf = false
       }
       // 如果端口不一样也否定
-      if (thisdom.port != window.location.port) {
-        is_self = false
+      if (thisdom.port !== window.location.port) {
+        isSelf = false
       }
       // 取得项目的项目根路径
       pathbase = APP.__pathinfo.dir.base
       // 强制以'/'开头
-      pathbase = (pathbase.substr(0, 1) == '/' ? '' : '/') + pathbase
+      pathbase = (pathbase.substr(0, 1) === '/' ? '' : '/') + pathbase
 
       pathquery = App.urlToPathquery(url)
 
       // 如果跳转的目标url的前缀不为项目的根路径就否定
-      if (pathquery.substr(0, pathbase.length) != pathbase) {
-        is_self = false
+      if (pathquery.substr(0, pathbase.length) !== pathbase) {
+        isSelf = false
       }
       // 如果被否定就中断
-      if (!is_self) { return }
+      if (!isSelf) { return }
       state = APP.inherit(null)
       state.pathquery = pathquery
       state.url = url
@@ -1004,7 +890,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       App.loadAppByState(state)
       $this = undefined
       url = undefined
-      is_self = undefined
+      isSelf = undefined
       thisdom = undefined
       pathquery = undefined
       pathbase = undefined
@@ -1020,7 +906,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
    * @return   {[type]}                   [description]
    */
     App.popStateRun = function (e) {
-      var $this, thisdom, originalEvent, state, app_obj
+      var $this, thisdom, originalEvent, state
       $this = $(this)
       thisdom = $this[0] || {}
       originalEvent = e.originalEvent
@@ -1031,6 +917,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
     }
   // toUrl([false,]url,title,is_replace)
     App.toUrl = function () {
+      var state, url
       var args = App.ModelArgsToArray(arguments)
       if (args[0] === false) {
         args.splice(0, 1)
@@ -1042,10 +929,9 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       state.url = url
       state.pathquery = App.urlToPathquery(state.url)
       state.title = args[1] || 'load'
-      url = undefined
-    // 插入
+      // 插入
       App.setPopState(state, (args[2] === false ? false : args[2]))
-    // 载入新页面
+      // 载入新页面
       App.loadAppByState(state)
     }
   /**
@@ -1057,11 +943,11 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
    * @param    {Boolean}                is_replace [布尔值]
    * @param    {string}                 title      [标题]
    */
-    App.setPopState = function (state, is_replace) {
+    App.setPopState = function (state, isReplace, title) {
       if (APP.__rLoad.ie678) {
         return
       }
-      if (is_replace === true && (!state)) {
+      if (isReplace === true && (!state)) {
         return
       }
 
@@ -1072,14 +958,13 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
         return
       }
       state.pathquery = state.pathquery || App.urlToPath(state.url)
-      if (is_replace) {
+      if (isReplace) {
         history.replaceState(state, state.title, state.url)
       } else {
         history.pushState(state, state.title, state.url)
       }
-      pathquery = undefined
       title = undefined
-      is_replace = undefined
+      isReplace = undefined
     }
   }
 // 数据模型加载器初始化
@@ -1129,32 +1014,23 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
    * @param    {string}                 error_id [错误ID]
    * @param    {object}                 data     [具体数据]
    */
-    MBP.error = function (msg, error_id, data) {
-      var error = new App.ModelsError(msg)
-      APP.extend(true, error, data)
-      error.error_id = error_id || error.error_id || 'error_id_unknown'
+    MBP.error = function (e) {
+      var msg = e.errorMsg = e.message || e.msg || e.statusMessage
+      var errorId = e.errorId = e.error_id || 'error_id_unknown'
       if (this.__M && this.__M.__callback_error && APP.type(this.__M.__callback_error, 'function')) {
-        this.__M.__callback_error.apply(this.__M, [msg, error.error_id, error])
+        this.__M.__callback_error(msg, errorId, e)
       } else {
-        var errorEvent = APP.inherit(null)
-        errorEvent.error_msg = msg
-        errorEvent.error_id = error_id
-        errorEvent.error_data = data || error
-        errorEvent.error = error
-        if (this.__M.processApp.appBrowser.trigger('modelError', true, errorEvent).result !== false) {
-          APP.App.error(msg, error)
+        if (this.__M.processApp.appBrowser.trigger('modelError', true, e).result !== false) {
+          APP.App.error(msg, e)
         }
       }
-      error = undefined
-      msg = undefined
-      error_id = undefined
-      data = undefined
+      msg = errorId = void 0
     }
   // 请求模式
     APP.each('get GET post POST put PUT del DEL'.split(' '), function (index, type) {
       MBP[type] = function (path) {
         type = type.toUpperCase()
-        if (type == 'DEL') {
+        if (type === 'DEL') {
           type = 'DELETE'
         }
         this.__api_id = (this.__api_id || 0) + 1
@@ -1173,47 +1049,47 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
    * [sendData 发送数据]
    * @author: 桦 <yuchonghua@163.com>
    * @DateTime 2016-06-22T22:50:36+0800
-   * @param    {Boolean}                is_clear [description]
+   * @param    {Boolean}                isClear [description]
    * @param    {[type]}                 data     [description]
    * @return   {[type]}                          [description]
    */
-    MBAP.sendData = function (is_clear, data) {
-      if (is_clear === true) {
+    MBAP.sendData = function (isClear, data) {
+      if (isClear === true) {
         this.__options.data = APP.inherit(null)
       } else {
-        data = is_clear
-        is_clear = undefined
+        data = isClear
+        isClear = undefined
       }
       APP.extend(true, this.__options.data, data)
       return this
     }
 
     MBAP.send = function (options) {
-      var _this = this
+      var self = this
       APP.extend(true, this.__options, options)
-      App.__Ajax(this.__options, function (data) {
-        if (_this.__callback_success && APP.type(_this.__callback_success, 'function')) {
-          _this.__callback_success.apply(_this, arguments)
-        } else if (_this && _this._API && _this._API.__M && _this._API.__M && _this._API.__M.__callback_success && APP.type(_this._API.__M.__callback_success, 'function')) {
-          _this._API.__M.__callback_success.apply(_this._API.__M, arguments)
+      APP.ddvApiRESTful(this.__options.path || '/')
+      .method(this.__options.type || 'GET').headers(this.__options.headers || {}).sendData(this.__options.data || {})
+      .then(function (res) {
+        if (self.__callback_success && APP.type(self.__callback_success, 'function')) {
+          self.__callback_success(res)
+        } else if (self && self._API && self._API.__M && self._API.__M && self._API.__M.__callback_success && APP.type(self._API.__M.__callback_success, 'function')) {
+          self._API.__M.__callback_success(res)
         }
-      }, function (msg, data) {
-        var error = new App.ModelsError(msg)
-        APP.extend(true, error, data)
-        error.error_id = error.error_id || 'error_id_unknown'
-        error.error_data = data || error
-        if (_this.__callback_error && APP.type(_this.__callback_error, 'function')) {
-          _this.__callback_error.apply(_this, [msg, error.error_id, error])
-        } else if (_this && _this._API && _this._API.__M && _this._API.__M && _this._API.__M.__callback_error && APP.type(_this._API.__M.__callback_error, 'function')) {
-          _this._API.__M.__callback_error.apply(_this._API.__M, [msg, error.error_id, error])
+      })
+      .catch(function (e) {
+        e.error = e
+        e.error_id = e.errorId = e.statusMessage || e.errorId || e.error_id || 'error_id_unknown'
+        e.error_msg = e.errorMsg = e.message = e.message || e.msg || e.statusMessage || 'error_id_unknown'
+        console.log('catch', e.body, Object.keys(e))
+        Object.keys(e).forEach(key => console.log(e[key]))
+
+        if (self.__callback_error && APP.type(self.__callback_error, 'function')) {
+          self.__callback_error(e.message, e.error_id, e)
+        } else if (self && self._API && self._API.__M && self._API.__M && self._API.__M.__callback_error && APP.type(self._API.__M.__callback_error, 'function')) {
+          self._API.__M.__callback_error(e.message, e.error_id, e)
         } else {
-          var errorEvent = APP.inherit(null)
-          errorEvent.error_msg = msg
-          errorEvent.error_id = error.error_id
-          errorEvent.error_data = data || error
-          errorEvent.error = error
-          if (_this._API.__M.processApp.appBrowser.trigger('modelError', true, errorEvent).result !== false) {
-            APP.App.error(msg, error)
+          if (self._API.__M.processApp.appBrowser.trigger('modelError', true, e).result !== false) {
+            APP.App.error(e.message, e)
           }
         }
       })
