@@ -10,6 +10,7 @@ const path = require('path')
 const requirejs = require('requirejs')
 // jsdom 创建
 const jsdom = require('jsdom')
+const { JSDOM } = jsdom
 // mustache
 const mustache = requirejs(path.resolve(__dirname, '../ddvstatic/js/mustache/mustache.js'))
 // 常用
@@ -76,19 +77,12 @@ function runController (req, res, c) {
     }
     // baseHtml缓存
     c.baseHtmlText = mustache.render(c.baseHtmlText, c.pathinfo)
-    return new Promise((resolve, reject) => {
-      jsdom.env({
-        html: c.baseHtmlText,
-        done: (e, window) => {
-          if (e) {
-            reject(e)
-          } else {
-            req.window = window
-            resolve()
-          }
-        }
-      })
-    })
+    try {
+      req.appdom = new JSDOM(c.baseHtmlText)
+      req.window = req.appdom.window
+    } catch (e) {
+      return Promise.reject(e)
+    }
   })
   .then(() => {
     return load.JQuery()
@@ -232,7 +226,7 @@ function runController (req, res, c) {
   })
   .then(() => {
     // 序列化dom
-    req.window.documentHtml = jsdom.serializeDocument(req.window.document)
+    req.window.documentHtml = req.appdom.serialize()
     // 返回渲染结果
     return Promise.resolve(req.window.documentHtml)
   })
