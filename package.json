@@ -12,7 +12,7 @@
     "chokidar": "^1.6.1",
     "cjb-base": ">=0.0.35",
     "cross-spawn": "~5.1.0",
-    "ddv-restful-api": "0.0.19",
+    "ddv-restful-api": "0.0.21",
     "ddv-worker": ">=0.0.18",
     "etag": ">=1.7.0",
     "express": "~4.14.0",
