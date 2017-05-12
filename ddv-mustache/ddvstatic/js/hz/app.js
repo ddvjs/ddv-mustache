@@ -1020,7 +1020,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       if (this.__M && this.__M.__callback_error && APP.type(this.__M.__callback_error, 'function')) {
         this.__M.__callback_error(msg, errorId, e)
       } else {
-        if (this.__M.processApp.appBrowser.trigger('modelError', true, e).result !== false) {
+        if (this.__M.processApp.appBrowser.trigger('modelError', true, {'error': e}).result !== false) {
           APP.App.error(msg, e)
         }
       }
@@ -1088,7 +1088,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
         } else if (self && self._API && self._API.__M && self._API.__M && self._API.__M.__callback_error && APP.type(self._API.__M.__callback_error, 'function')) {
           self._API.__M.__callback_error(e.message, e.error_id, e)
         } else {
-          if (self._API.__M.processApp.appBrowser.trigger('modelError', true, e).result !== false) {
+          if (self._API.__M.processApp.appBrowser.trigger('modelError', true, {'error': e}).result !== false) {
             APP.App.error(e.message, e)
           }
         }
