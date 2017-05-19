@@ -1082,7 +1082,6 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
         e.error_id = e.errorId = e.statusMessage || e.errorId || e.error_id || 'error_id_unknown'
         e.error_msg = e.errorMsg = e.message = e.message || e.msg || e.statusMessage || 'error_id_unknown'
         console.log('catch', e.body, Object.keys(e))
-        Object.keys(e).forEach(key => console.log(e[key]))
 
         if (self.__callback_error && APP.type(self.__callback_error, 'function')) {
           self.__callback_error(e.message, e.error_id, e)
