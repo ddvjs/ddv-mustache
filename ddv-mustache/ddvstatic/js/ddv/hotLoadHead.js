@@ -43,7 +43,14 @@ var addLoadLists = function (loadlists, window) {
     } catch (e) {}
     if (!rLoad.isLoadError) {
       rLoad.isLoadError = true
-      alert('网络问题，刷新重试！\n' + (error && (error.stack || error.message )))
+      var msg
+      msg = '插件加载' + name + '失败\n======\n'
+      msg += error && error.originalError && error.originalError.message
+      msg += '\n======\n'
+      msg += error && error.originalError && error.originalError.stack
+      msg += '\n======\n'
+      msg += error && (error.stack || error.message)
+      alert(msg)
     }
   }
   rLoad.i = 0
@@ -144,7 +151,13 @@ var addLoadLists = function (loadlists, window) {
         // We use an anonymous function so that context is window
         // rather than jQuery in Firefox
         (window.execScript || function (data) {
-          window[ 'eval' ].call(window, data)
+          try {
+            window.eval.call(window, data)
+          } catch (e) {
+            alert('程序加载错误\n======' + e.message + '\n======\n确认马上看程序代码\n======\n' + e.stack)
+            alert(data)
+            throw e
+          }
         })(data)
       }
     }
@@ -159,7 +172,7 @@ var addLoadLists = function (loadlists, window) {
       }
       isInit = true
       if (err) {
-        alert('网络错误，请联系开发者查询问题！\n' + (err && (err.stack || err.message )))
+        alert('网络错误，请联系开发者查询问题！\n' + (err && (err.stack || err.message)))
         console.error(err)
         return
       }

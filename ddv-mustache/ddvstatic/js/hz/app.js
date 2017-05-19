@@ -1,4 +1,5 @@
 /* global define, APP */
+/* eslint-disable camelcase */
 define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, base) {
 // APP 超全局对象
 // App 加载app的对象
@@ -87,7 +88,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       q = APP.queue().setThis(this)
       // 载入控制器
       q.push(function loadControllers (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         // 加载文件
@@ -112,7 +113,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
       // 加载视图模块
       q.push(true, function loadViews (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         if (!this.sys.controllers.view) {
@@ -187,7 +188,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
       })
       // 运行node
       q.push(true, function newNode (next) {
-        if (App.add_time_last != this.add_time) {
+        if (App.add_time_last !== this.add_time) {
           q.abort(); return// 放弃加载
         }
         // 如果是node运行
@@ -395,7 +396,7 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
           if (!this.bodywrap) {
             createWrap.call(this)
           }
-          if (App.add_time_last != this.add_time) {
+          if (App.add_time_last !== this.add_time) {
             qe.abort(); return// 放弃加载
           }
           if (!(this.bodywrap && this.bodywrap.length > 0)) {
