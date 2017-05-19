@@ -43,7 +43,7 @@ var addLoadLists = function (loadlists, window) {
     } catch (e) {}
     if (!rLoad.isLoadError) {
       rLoad.isLoadError = true
-      alert('网络问题，刷新重试！')
+      alert('网络问题，刷新重试！\n' + (error && (error.stack || error.message )))
     }
   }
   rLoad.i = 0
@@ -159,7 +159,7 @@ var addLoadLists = function (loadlists, window) {
       }
       isInit = true
       if (err) {
-        alert('网络错误，请联系开发者查询问题！')
+        alert('网络错误，请联系开发者查询问题！\n' + (err && (err.stack || err.message )))
         console.error(err)
         return
       }
