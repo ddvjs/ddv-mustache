@@ -1015,17 +1015,19 @@ define(['jquery', 'mustache', 'app.base'], function appAppInit ($, Mustache, bas
    * @param    {string}                 error_id [错误ID]
    * @param    {object}                 data     [具体数据]
    */
-    MBP.error = function (e) {
-      var msg = e.errorMsg = e.message || e.msg || e.statusMessage
-      var errorId = e.errorId = e.error_id || 'error_id_unknown'
+    MBP.error = function (message, errorId, e) {
+      message = message || errorId || (e && (e.errorMsg || e.message || e.msg || e.statusMessage)) || 'unknown error'
+      errorId = errorId || (e && (e.errorId || e.message || e.msg || e.statusMessage)) || message || 'error_id_unknown'
+      e = e || new Error(message)
+      errorId = e.errorId = e.errorId || errorId
       if (this.__M && this.__M.__callback_error && APP.type(this.__M.__callback_error, 'function')) {
-        this.__M.__callback_error(msg, errorId, e)
+        this.__M.__callback_error(message, errorId, e)
       } else {
         if (this.__M.processApp.appBrowser.trigger('modelError', true, {'error': e}).result !== false) {
-          APP.App.error(msg, e)
+          APP.App.error(message, e)
         }
       }
-      msg = errorId = void 0
+      message = errorId = void 0
     }
   // 请求模式
     APP.each('get GET post POST put PUT del DEL'.split(' '), function (index, type) {
