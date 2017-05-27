@@ -502,6 +502,15 @@ define(function () {
     }
 
     /**
+		 * 验证是否是数组
+		 * @author: 华狄 <861883474@qq.com>
+		 */
+
+    often.isArray = function (obj) {
+      return Object.prototype.toString.call(obj) === '[object Array]'
+    }
+
+    /**
      * 返回所有结果集,格式为[[1,2,3],[4,5,6]...]
      * @author: 华狄 <861883474@qq.com>
      * @param array
@@ -515,12 +524,12 @@ define(function () {
 
       var r = [];
       (function f (t, a, n) {
-        if (n === 0) return r.push(t)
+        if (n === array.length) return r.push(t)
 
-        for (var i = 0; i < a[n - 1].length; i++) {
-          f(t.concat(a[n - 1][i]), a, n - 1)
+        for (var i = 0; i < a[n].length; i++) {
+          f(t.concat(a[n][i]), a, n + 1)
         }
-      })([], array, array.length)
+      })([], array, array.length - array.length)
 
       return r
     }
